@@ -145,6 +145,10 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * Package Service Providers...
+         */
+        BackupManager\Laravel\Laravel5ServiceProvider::class,
     ],
 
     /*

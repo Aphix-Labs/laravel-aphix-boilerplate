@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\Inspire::class,
+        \BackupManager\Laravel\DbBackupCommand::class
     ];
 
     /**
@@ -24,7 +24,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('inspire')
-                 ->hourly();
+        // backup
+        $backupName = 'backups/' .  gmdate("Y_m_d_H:i:s", time());
+
+        $schedule->command("db:backup
+            --database=pgsql
+            --destination=local
+            --destinationPath=$backupName
+            --compression=gzip")->daily();
     }
 }

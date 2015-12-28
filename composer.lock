@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9d98aa3e980cd130a1ad5bf31617adc8",
-    "content-hash": "d3bdc96ccb7e7ea608c4fc2d013b6b8c",
+    "hash": "e94b10e79bb2ca74fa66964d8cb890a8",
+    "content-hash": "44e8f8cf2359dce134d8e1848171a79a",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -587,6 +587,51 @@
                 "uri"
             ],
             "time": "2015-11-03 01:34:55"
+        },
+        {
+            "name": "itsgoingd/clockwork",
+            "version": "v1.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/itsgoingd/clockwork.git",
+                "reference": "b3f0cd7f314d55ede9c70dda48425b7fb03d7ed6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/itsgoingd/clockwork/zipball/b3f0cd7f314d55ede9c70dda48425b7fb03d7ed6",
+                "reference": "b3f0cd7f314d55ede9c70dda48425b7fb03d7ed6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "psr/log": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Clockwork": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "itsgoingd",
+                    "email": "itsgoingd@luzer.sk",
+                    "homepage": "http://twitter.com/itsgoingd"
+                }
+            ],
+            "description": "Server-side component of Clockwork, a Chrome extension for PHP development",
+            "homepage": "http://github.com/itsgoingd/clockwork",
+            "keywords": [
+                "debugging",
+                "laravel",
+                "logging",
+                "profiling"
+            ],
+            "time": "2015-12-23 12:31:51"
         },
         {
             "name": "jakub-onderka/php-console-color",

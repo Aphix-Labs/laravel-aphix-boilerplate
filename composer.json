@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.1.*",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "backup-manager/laravel": "~1.0"
+        "backup-manager/laravel": "~1.0",
+        "itsgoingd/clockwork": "^1.10"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

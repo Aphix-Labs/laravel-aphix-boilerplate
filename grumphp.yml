@@ -8,5 +8,5 @@ parameters:
       tab_width: ~
       ignore_patterns: ['tests/', 'database/']
       sniffs: []
-      phpunit:
-        config_file: ~
+    phpunit:
+      config_file: ~

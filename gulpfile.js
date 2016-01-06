@@ -1,12 +1,19 @@
 var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
-  mix.sass('app.scss');
 
-  mix.scripts([
-    './node_modules/jquery/dist/jquery.min.js',
-    './node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
-  ]);
+  // common
+  mix.copy(
+    'node_modules/font-awesome/fonts',
+    'public/build/fonts/'
+  )
 
-  mix.version(['css/app.css', 'js/all.js']);
+  // front-end
+  mix.sass('frontend.scss');
+
+  mix.browserify('frontend.js');
+
+  mix.version(['css/frontend.css', 'js/frontend.js']);
+
+  //back-end
 });

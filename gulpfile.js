@@ -6,7 +6,7 @@ elixir(function(mix) {
   mix.copy(
     'node_modules/font-awesome/fonts',
     'public/build/fonts/'
-  )
+  );
 
   // front-end
   mix.sass('frontend.scss');

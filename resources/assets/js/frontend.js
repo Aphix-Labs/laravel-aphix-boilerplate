@@ -2,7 +2,7 @@
 
 // dependencies
 
-window.$ = window.jQuery = require('jquery')
+window.$ = window.jQuery = require('jquery');
 require('bootstrap-sass');
 var angular = require('angular');
 
@@ -10,4 +10,4 @@ var angular = require('angular');
 
 angular
   .module('angularApp', [])
-  .controller('MainCtrl', require('./controllers/mainctrl'))
+  .controller('MainCtrl', require('./controllers/mainctrl'));

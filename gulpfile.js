@@ -8,12 +8,12 @@ elixir(function(mix) {
     'public/build/fonts/'
   );
 
-  // front-end
-  mix.sass('frontend.scss');
+  // public
+  mix.sass('public.scss');
 
-  mix.browserify('frontend.js');
+  mix.browserify('public/index.js', 'public/js/public.js');
 
-  mix.version(['css/frontend.css', 'js/frontend.js']);
+  mix.version(['css/public.css', 'js/public.js']);
 
-  //back-end
+  // admin
 });

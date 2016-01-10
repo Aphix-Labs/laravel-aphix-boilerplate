@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" rel='stylesheet' type='text/css'>
 
     <!-- Styles -->
-    <link href="{{ elixir('css/frontend.css') }}" rel="stylesheet">
+    <link href="{{ elixir('css/public.css') }}" rel="stylesheet">
 
     <style>
         body {
@@ -73,6 +73,6 @@
     @yield('content')
 
     <!-- JavaScripts -->
-    <script src="{{ elixir('js/frontend.js') }}"></script>
+    <script src="{{ elixir('js/public.js') }}"></script>
 </body>
 </html>

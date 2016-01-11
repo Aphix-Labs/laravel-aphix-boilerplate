@@ -8,6 +8,7 @@
     "bootstrap-sass": "^3.0.0",
     "font-awesome": "^4.5.0",
     "jquery": "^2.1.4",
-    "laravel-elixir": "^3.0.0"
+    "laravel-elixir": "^3.0.0",
+    "metismenu": "^2.2.0"
   }
 }

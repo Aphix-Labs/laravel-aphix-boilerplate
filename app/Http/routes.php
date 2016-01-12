@@ -12,6 +12,6 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 // admin
-Route::group(['middleware' => ['web', 'admin'], 'namespace' => 'Admin'], function () {
+Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin'], function () {
     Route::get('/admin', 'AdminController@index');
 });

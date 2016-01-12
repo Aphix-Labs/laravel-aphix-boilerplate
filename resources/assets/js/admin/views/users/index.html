@@ -1,0 +1,14 @@
+<table class='table'>
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="user in vm.users">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+        </tr>
+    </tbody>
+</table>

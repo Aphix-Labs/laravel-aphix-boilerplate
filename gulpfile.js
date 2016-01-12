@@ -22,11 +22,14 @@ elixir(function(mix) {
   ], 'resources/assets/css/admin/admin.css');
 
   mix.styles([
-    "../../../node_modules/metismenu/dist/metisMenu.css",
+    '../../../node_modules/metismenu/dist/metisMenu.css',
     'admin/admin.css'
   ], 'public/css/admin.css');
 
   mix.browserify('admin/index.js', 'public/js/admin.js');
+
+  // angular templates
+  mix.copy('resources/assets/js/admin/views', 'public/views/admin/');
 
   mix.version([
     'css/public.css',

@@ -23,7 +23,7 @@
         }
     </style>
 </head>
-<body id="app-layout">
+<body id="app-layout" ng-app="adminApp">
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
@@ -78,7 +78,7 @@
                         </a>
                         <ul aria-expanded="true" class="collapse in">
                             <li>
-                                <a href="#">
+                                <a href="/admin/users">
                                     <span class="sidebar-nav-item-icon fa fa-users"></span>
                                     Usuarios
                                 </a>

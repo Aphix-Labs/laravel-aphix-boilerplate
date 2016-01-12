@@ -12,6 +12,11 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 // admin
-Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin'], function () {
-    Route::get('/admin', 'AdminController@index');
+Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 'prefix' => 'admin'], function () {
+    Route::get('/', 'AdminController@index');
+    Route::get('users', 'UsersController@index');
+});
+
+Route::get('users', function() {
+    return \App\User::all();
 });

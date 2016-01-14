@@ -13,10 +13,12 @@ Route::group(['middleware' => 'web'], function () {
 
 // admin
 Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 'prefix' => 'admin'], function () {
+    // views
     Route::get('/', 'AdminController@index');
     Route::get('users', 'UsersController@index');
+
+    // actions
+    Route::get('users/all', 'UsersController@all');
+    Route::post('users', 'UsersController@store');
 });
 
-Route::get('users', function() {
-    return \App\User::all();
-});

@@ -45259,6 +45259,76 @@ return jQuery;
 })(jQuery);
 
 },{}],7:[function(require,module,exports){
+'use strict';
+
+// dependencies
+
+var $ = window.jQuery = require('jquery');
+require('bootstrap-sass');
+require('metismenu');
+var angular = require('angular');
+require('angular-ui-router');
+
+// app
+$('#menu').metisMenu();
+angular.module('adminApp', ['ui.router']).config(require('./routes.js')).service('UserService', require('./users/UserService'));
+
+},{"./routes.js":8,"./users/UserService":11,"angular":3,"angular-ui-router":1,"bootstrap-sass":4,"jquery":5,"metismenu":6}],8:[function(require,module,exports){
+'use strict';
+
+module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
+  'ngInject';
+
+  $locationProvider.html5Mode({
+    // enabled: true,
+    // requireBase: false
+  });
+
+  // users
+  $stateProvider.state('users', {
+    url: '',
+    controller: require('./users/ListController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/users/index.html',
+    title: 'Users'
+  }).state('users-create', {
+    url: '/create',
+    controller: require('./users/CreateController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/users/create.html',
+    title: 'Users'
+  });
+
+  //
+};
+
+},{"./users/CreateController":9,"./users/ListController":10}],9:[function(require,module,exports){
+'use strict';
+
+module.exports = function (UserService) {
+  'ngInject';
+  var vm = this;
+
+  vm.data = {
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: ''
+  };
+
+  vm.errors = {};
+
+  this.submitForm = function () {
+    UserService.createUser(vm.data).then(function (data) {
+      console.log('usuario creado', data);
+    }, function (errors) {
+      vm.errors = errors.data;
+      console.log(vm.errors);
+    });
+  };
+};
+
+},{}],10:[function(require,module,exports){
 "use strict";
 
 module.exports = function (UserService) {
@@ -45270,55 +45340,21 @@ module.exports = function (UserService) {
   });
 };
 
-},{}],8:[function(require,module,exports){
-'use strict';
-
-// dependencies
-
-window.$ = window.jQuery = require('jquery');
-require('bootstrap-sass');
-require('metismenu');
-var angular = require('angular');
-require('angular-ui-router');
-
-// app
-$("#menu").metisMenu();
-
-angular.module('adminApp', ['ui.router']).config(require('./routes.js')).service('UserService', require('./services/UserService')).controller('UsersController', require('./controllers/UsersController'));
-
-},{"./controllers/UsersController":7,"./routes.js":9,"./services/UserService":10,"angular":3,"angular-ui-router":1,"bootstrap-sass":4,"jquery":5,"metismenu":6}],9:[function(require,module,exports){
-'use strict';
-
-module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
-  'ngInject';
-
-  $locationProvider.html5Mode({
-    enabled: true,
-    requireBase: false
-  });
-
-  $stateProvider.state('users', {
-    url: '/admin/users',
-    controller: 'UsersController',
-    controllerAs: 'vm',
-    templateUrl: '/views/admin/users/index.html',
-    title: 'Users'
-  });
-
-  $urlRouterProvider.otherwise('/admin/users');
-};
-
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = function ($http) {
   'ngInject';
 
   this.getUsers = function () {
-    return $http.get('/users');
+    return $http.get('/admin/users/all');
+  };
+
+  this.createUser = function (data) {
+    return $http.post('/admin/users', data);
   };
 };
 
-},{}]},{},[8]);
+},{}]},{},[7]);
 
 //# sourceMappingURL=admin.js.map

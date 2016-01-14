@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- <base href="/"> -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -95,11 +96,9 @@
             </nav>
         </aside>
 
-        <section class="content">
-            <div class='col-xs-12'>
-                @yield('content')
-            </div>
-        </section>
+        <section class="content container">
+            @yield('content')
+        </section >
     </div>
 
     <!-- JavaScripts -->

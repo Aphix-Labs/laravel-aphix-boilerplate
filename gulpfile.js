@@ -23,6 +23,7 @@ elixir(function(mix) {
 
   mix.styles([
     '../../../node_modules/metismenu/dist/metisMenu.css',
+    '../../../node_modules/angular-toastr/dist/angular-toastr.css',
     'admin/admin.css'
   ], 'public/css/admin.css');
 

@@ -1,4 +1,4 @@
-module.exports = function (UserService) {
+module.exports = function (UserService, $state, toastr) {
   'ngInject';
   var vm = this;
 
@@ -11,12 +11,27 @@ module.exports = function (UserService) {
 
   vm.errors = {};
 
+  vm.formIsSubmit = false;
+
+  this.hasError = function(property) {
+    if (vm.errors.hasOwnProperty(property)) {
+      return true;
+    }
+    return false;
+  };
+
   this.submitForm = function () {
-    UserService.createUser(vm.data).then(function(data) {
-      console.log('usuario creado', data);
-    }, function(errors) {
+    vm.formIsSubmit = true;
+
+    UserService.createUser(vm.data)
+    .then(function(data) {
+      toastr.success(data.data.message, 'Estado!');
+      $state.go('users');
+    })
+    .catch(function(errors) {
       vm.errors = errors.data;
-      console.log(vm.errors);
+    }).finally(function() {
+      vm.formIsSubmit = false;
     });
   };
 };

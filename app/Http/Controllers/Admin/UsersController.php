@@ -36,4 +36,13 @@ class UsersController extends Controller
 
         return response()->json(['message' => 'Usuario creado satisfatoriamente']);
     }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->delete();
+
+        return response()->json(['message' => 'Usuario eliminado satisfatoriamente']);
+    }
 }

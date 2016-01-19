@@ -8,4 +8,8 @@ module.exports = function ($http) {
   this.createUser = function(data) {
     return $http.post('/admin/users', data);
   };
+
+  this.deleteUser = function(id) {
+    return $http.delete('/admin/users/' + id);
+  };
 };

@@ -20,5 +20,5 @@ Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 
     // actions
     Route::get('users/all', 'UsersController@all');
     Route::post('users', 'UsersController@store');
+    Route::delete('users/{id}', 'UsersController@destroy');
 });
-

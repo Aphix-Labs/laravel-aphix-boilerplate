@@ -9,11 +9,13 @@ var angular = require('angular');
 var ngAnimate = require('angular-animate');
 require('angular-toastr');
 require('angular-ui-router');
+require('sweetalert');
+require('angular-sweetalert');
 
 // app
 $('#menu').metisMenu();
 angular
 
-.module('adminApp', ['ui.router', 'toastr', ngAnimate])
+.module('adminApp', ['ui.router', 'toastr', 'oitozero.ngSweetAlert', ngAnimate])
 .config(require('./routes.js'))
 .service('UserService', require('./users/UserService'));

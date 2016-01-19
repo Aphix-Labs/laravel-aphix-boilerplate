@@ -9,6 +9,7 @@
         <tr ng-repeat="user in vm.users">
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
+            <td><a ng-click="vm.destroy(user.id, $index)">Eliminar</a></td>
         </tr>
     </tbody>
 </table>

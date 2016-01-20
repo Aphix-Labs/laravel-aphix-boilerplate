@@ -3935,6 +3935,341 @@ require('./angular-animate');
 module.exports = 'ngAnimate';
 
 },{"./angular-animate":1}],3:[function(require,module,exports){
+/*! 
+ * angular-loading-bar v0.8.0
+ * https://chieffancypants.github.io/angular-loading-bar
+ * Copyright (c) 2015 Wes Cruver
+ * License: MIT
+ */
+/*
+ * angular-loading-bar
+ *
+ * intercepts XHR requests and creates a loading bar.
+ * Based on the excellent nprogress work by rstacruz (more info in readme)
+ *
+ * (c) 2013 Wes Cruver
+ * License: MIT
+ */
+
+
+(function() {
+
+'use strict';
+
+// Alias the loading bar for various backwards compatibilities since the project has matured:
+angular.module('angular-loading-bar', ['cfp.loadingBarInterceptor']);
+angular.module('chieffancypants.loadingBar', ['cfp.loadingBarInterceptor']);
+
+
+/**
+ * loadingBarInterceptor service
+ *
+ * Registers itself as an Angular interceptor and listens for XHR requests.
+ */
+angular.module('cfp.loadingBarInterceptor', ['cfp.loadingBar'])
+  .config(['$httpProvider', function ($httpProvider) {
+
+    var interceptor = ['$q', '$cacheFactory', '$timeout', '$rootScope', '$log', 'cfpLoadingBar', function ($q, $cacheFactory, $timeout, $rootScope, $log, cfpLoadingBar) {
+
+      /**
+       * The total number of requests made
+       */
+      var reqsTotal = 0;
+
+      /**
+       * The number of requests completed (either successfully or not)
+       */
+      var reqsCompleted = 0;
+
+      /**
+       * The amount of time spent fetching before showing the loading bar
+       */
+      var latencyThreshold = cfpLoadingBar.latencyThreshold;
+
+      /**
+       * $timeout handle for latencyThreshold
+       */
+      var startTimeout;
+
+
+      /**
+       * calls cfpLoadingBar.complete() which removes the
+       * loading bar from the DOM.
+       */
+      function setComplete() {
+        $timeout.cancel(startTimeout);
+        cfpLoadingBar.complete();
+        reqsCompleted = 0;
+        reqsTotal = 0;
+      }
+
+      /**
+       * Determine if the response has already been cached
+       * @param  {Object}  config the config option from the request
+       * @return {Boolean} retrns true if cached, otherwise false
+       */
+      function isCached(config) {
+        var cache;
+        var defaultCache = $cacheFactory.get('$http');
+        var defaults = $httpProvider.defaults;
+
+        // Choose the proper cache source. Borrowed from angular: $http service
+        if ((config.cache || defaults.cache) && config.cache !== false &&
+          (config.method === 'GET' || config.method === 'JSONP')) {
+            cache = angular.isObject(config.cache) ? config.cache
+              : angular.isObject(defaults.cache) ? defaults.cache
+              : defaultCache;
+        }
+
+        var cached = cache !== undefined ?
+          cache.get(config.url) !== undefined : false;
+
+        if (config.cached !== undefined && cached !== config.cached) {
+          return config.cached;
+        }
+        config.cached = cached;
+        return cached;
+      }
+
+
+      return {
+        'request': function(config) {
+          // Check to make sure this request hasn't already been cached and that
+          // the requester didn't explicitly ask us to ignore this request:
+          if (!config.ignoreLoadingBar && !isCached(config)) {
+            $rootScope.$broadcast('cfpLoadingBar:loading', {url: config.url});
+            if (reqsTotal === 0) {
+              startTimeout = $timeout(function() {
+                cfpLoadingBar.start();
+              }, latencyThreshold);
+            }
+            reqsTotal++;
+            cfpLoadingBar.set(reqsCompleted / reqsTotal);
+          }
+          return config;
+        },
+
+        'response': function(response) {
+          if (!response || !response.config) {
+            $log.error('Broken interceptor detected: Config object not supplied in response:\n https://github.com/chieffancypants/angular-loading-bar/pull/50');
+            return response;
+          }
+
+          if (!response.config.ignoreLoadingBar && !isCached(response.config)) {
+            reqsCompleted++;
+            $rootScope.$broadcast('cfpLoadingBar:loaded', {url: response.config.url, result: response});
+            if (reqsCompleted >= reqsTotal) {
+              setComplete();
+            } else {
+              cfpLoadingBar.set(reqsCompleted / reqsTotal);
+            }
+          }
+          return response;
+        },
+
+        'responseError': function(rejection) {
+          if (!rejection || !rejection.config) {
+            $log.error('Broken interceptor detected: Config object not supplied in rejection:\n https://github.com/chieffancypants/angular-loading-bar/pull/50');
+            return $q.reject(rejection);
+          }
+
+          if (!rejection.config.ignoreLoadingBar && !isCached(rejection.config)) {
+            reqsCompleted++;
+            $rootScope.$broadcast('cfpLoadingBar:loaded', {url: rejection.config.url, result: rejection});
+            if (reqsCompleted >= reqsTotal) {
+              setComplete();
+            } else {
+              cfpLoadingBar.set(reqsCompleted / reqsTotal);
+            }
+          }
+          return $q.reject(rejection);
+        }
+      };
+    }];
+
+    $httpProvider.interceptors.push(interceptor);
+  }]);
+
+
+/**
+ * Loading Bar
+ *
+ * This service handles adding and removing the actual element in the DOM.
+ * Generally, best practices for DOM manipulation is to take place in a
+ * directive, but because the element itself is injected in the DOM only upon
+ * XHR requests, and it's likely needed on every view, the best option is to
+ * use a service.
+ */
+angular.module('cfp.loadingBar', [])
+  .provider('cfpLoadingBar', function() {
+
+    this.autoIncrement = true;
+    this.includeSpinner = true;
+    this.includeBar = true;
+    this.latencyThreshold = 100;
+    this.startSize = 0.02;
+    this.parentSelector = 'body';
+    this.spinnerTemplate = '<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>';
+    this.loadingBarTemplate = '<div id="loading-bar"><div class="bar"><div class="peg"></div></div></div>';
+
+    this.$get = ['$injector', '$document', '$timeout', '$rootScope', function ($injector, $document, $timeout, $rootScope) {
+      var $animate;
+      var $parentSelector = this.parentSelector,
+        loadingBarContainer = angular.element(this.loadingBarTemplate),
+        loadingBar = loadingBarContainer.find('div').eq(0),
+        spinner = angular.element(this.spinnerTemplate);
+
+      var incTimeout,
+        completeTimeout,
+        started = false,
+        status = 0;
+
+      var autoIncrement = this.autoIncrement;
+      var includeSpinner = this.includeSpinner;
+      var includeBar = this.includeBar;
+      var startSize = this.startSize;
+
+      /**
+       * Inserts the loading bar element into the dom, and sets it to 2%
+       */
+      function _start() {
+        if (!$animate) {
+          $animate = $injector.get('$animate');
+        }
+
+        var $parent = $document.find($parentSelector).eq(0);
+        $timeout.cancel(completeTimeout);
+
+        // do not continually broadcast the started event:
+        if (started) {
+          return;
+        }
+
+        $rootScope.$broadcast('cfpLoadingBar:started');
+        started = true;
+
+        if (includeBar) {
+          $animate.enter(loadingBarContainer, $parent, angular.element($parent[0].lastChild));
+        }
+
+        if (includeSpinner) {
+          $animate.enter(spinner, $parent, angular.element($parent[0].lastChild));
+        }
+
+        _set(startSize);
+      }
+
+      /**
+       * Set the loading bar's width to a certain percent.
+       *
+       * @param n any value between 0 and 1
+       */
+      function _set(n) {
+        if (!started) {
+          return;
+        }
+        var pct = (n * 100) + '%';
+        loadingBar.css('width', pct);
+        status = n;
+
+        // increment loadingbar to give the illusion that there is always
+        // progress but make sure to cancel the previous timeouts so we don't
+        // have multiple incs running at the same time.
+        if (autoIncrement) {
+          $timeout.cancel(incTimeout);
+          incTimeout = $timeout(function() {
+            _inc();
+          }, 250);
+        }
+      }
+
+      /**
+       * Increments the loading bar by a random amount
+       * but slows down as it progresses
+       */
+      function _inc() {
+        if (_status() >= 1) {
+          return;
+        }
+
+        var rnd = 0;
+
+        // TODO: do this mathmatically instead of through conditions
+
+        var stat = _status();
+        if (stat >= 0 && stat < 0.25) {
+          // Start out between 3 - 6% increments
+          rnd = (Math.random() * (5 - 3 + 1) + 3) / 100;
+        } else if (stat >= 0.25 && stat < 0.65) {
+          // increment between 0 - 3%
+          rnd = (Math.random() * 3) / 100;
+        } else if (stat >= 0.65 && stat < 0.9) {
+          // increment between 0 - 2%
+          rnd = (Math.random() * 2) / 100;
+        } else if (stat >= 0.9 && stat < 0.99) {
+          // finally, increment it .5 %
+          rnd = 0.005;
+        } else {
+          // after 99%, don't increment:
+          rnd = 0;
+        }
+
+        var pct = _status() + rnd;
+        _set(pct);
+      }
+
+      function _status() {
+        return status;
+      }
+
+      function _completeAnimation() {
+        status = 0;
+        started = false;
+      }
+
+      function _complete() {
+        if (!$animate) {
+          $animate = $injector.get('$animate');
+        }
+
+        $rootScope.$broadcast('cfpLoadingBar:completed');
+        _set(1);
+
+        $timeout.cancel(completeTimeout);
+
+        // Attempt to aggregate any start/complete calls within 500ms:
+        completeTimeout = $timeout(function() {
+          var promise = $animate.leave(loadingBarContainer, _completeAnimation);
+          if (promise && promise.then) {
+            promise.then(_completeAnimation);
+          }
+          $animate.leave(spinner);
+        }, 500);
+      }
+
+      return {
+        start            : _start,
+        set              : _set,
+        status           : _status,
+        inc              : _inc,
+        complete         : _complete,
+        autoIncrement    : this.autoIncrement,
+        includeSpinner   : this.includeSpinner,
+        latencyThreshold : this.latencyThreshold,
+        parentSelector   : this.parentSelector,
+        startSize        : this.startSize
+      };
+
+
+    }];     //
+  });       // wtf javascript. srsly
+})();       //
+
+},{}],4:[function(require,module,exports){
+require('./build/loading-bar');
+module.exports = 'angular-loading-bar';
+
+},{"./build/loading-bar":3}],5:[function(require,module,exports){
 /**
 @fileOverview
 
@@ -3990,7 +4325,7 @@ angular.module('oitozero.ngSweetAlert', [])
 	return self;
 }]);
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function() {
   'use strict';
 
@@ -4483,12 +4818,12 @@ angular.module('oitozero.ngSweetAlert', [])
 
 angular.module("toastr").run(["$templateCache", function($templateCache) {$templateCache.put("directives/progressbar/progressbar.html","<div class=\"toast-progress\"></div>\n");
 $templateCache.put("directives/toast/toast.html","<div class=\"{{toastClass}} {{toastType}}\" ng-click=\"tapToast()\">\n  <div ng-switch on=\"allowHtml\">\n    <div ng-switch-default ng-if=\"title\" class=\"{{titleClass}}\" aria-label=\"{{title}}\">{{title}}</div>\n    <div ng-switch-default class=\"{{messageClass}}\" aria-label=\"{{message}}\">{{message}}</div>\n    <div ng-switch-when=\"true\" ng-if=\"title\" class=\"{{titleClass}}\" ng-bind-html=\"title\"></div>\n    <div ng-switch-when=\"true\" class=\"{{messageClass}}\" ng-bind-html=\"message\"></div>\n  </div>\n  <progress-bar ng-if=\"progressBar\"></progress-bar>\n</div>\n");}]);
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 require('./dist/angular-toastr.tpls.js');
 module.exports = 'toastr';
 
 
-},{"./dist/angular-toastr.tpls.js":4}],6:[function(require,module,exports){
+},{"./dist/angular-toastr.tpls.js":6}],8:[function(require,module,exports){
 /**
  * State-based routing for AngularJS
  * @version v0.2.15
@@ -8859,7 +9194,7 @@ angular.module('ui.router.state')
   .filter('isState', $IsStateFilter)
   .filter('includedByState', $IncludedByStateFilter);
 })(window, window.angular);
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
  * @license AngularJS v1.4.8
  * (c) 2010-2015 Google, Inc. http://angularjs.org
@@ -37878,11 +38213,11 @@ $provide.value("$locale", {
 })(window, document);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":7}],9:[function(require,module,exports){
+},{"./angular":9}],11:[function(require,module,exports){
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -40247,7 +40582,7 @@ if (typeof jQuery === 'undefined') {
 
 }(jQuery);
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -49459,7 +49794,7 @@ return jQuery;
 
 }));
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
  * metismenu - v2.2.0
  * A jQuery menu plugin
@@ -49748,7 +50083,7 @@ return jQuery;
 
 })(jQuery);
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49781,7 +50116,7 @@ var defaultParams = {
 
 exports['default'] = defaultParams;
 module.exports = exports['default'];
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -49917,7 +50252,7 @@ exports['default'] = {
   handleCancel: handleCancel
 };
 module.exports = exports['default'];
-},{"./handle-dom":14,"./handle-swal-dom":16,"./utils":19}],14:[function(require,module,exports){
+},{"./handle-dom":16,"./handle-swal-dom":18,"./utils":21}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50109,7 +50444,7 @@ exports.fadeIn = fadeIn;
 exports.fadeOut = fadeOut;
 exports.fireClick = fireClick;
 exports.stopEventPropagation = stopEventPropagation;
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50189,7 +50524,7 @@ var handleKeyDown = function handleKeyDown(event, params, modal) {
 
 exports['default'] = handleKeyDown;
 module.exports = exports['default'];
-},{"./handle-dom":14,"./handle-swal-dom":16}],16:[function(require,module,exports){
+},{"./handle-dom":16,"./handle-swal-dom":18}],18:[function(require,module,exports){
 'use strict';
 
 var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
@@ -50357,7 +50692,7 @@ exports.openModal = openModal;
 exports.resetInput = resetInput;
 exports.resetInputError = resetInputError;
 exports.fixVerticalPosition = fixVerticalPosition;
-},{"./default-params":12,"./handle-dom":14,"./injected-html":17,"./utils":19}],17:[function(require,module,exports){
+},{"./default-params":14,"./handle-dom":16,"./injected-html":19,"./utils":21}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -50400,7 +50735,7 @@ var injectedHTML =
 
 exports["default"] = injectedHTML;
 module.exports = exports["default"];
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50626,7 +50961,7 @@ var setParameters = function setParameters(params) {
 
 exports['default'] = setParameters;
 module.exports = exports['default'];
-},{"./handle-dom":14,"./handle-swal-dom":16,"./utils":19}],19:[function(require,module,exports){
+},{"./handle-dom":16,"./handle-swal-dom":18,"./utils":21}],21:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -50700,7 +51035,7 @@ exports.hexToRgb = hexToRgb;
 exports.isIE8 = isIE8;
 exports.logStr = logStr;
 exports.colorLuminance = colorLuminance;
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 
 var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
@@ -51004,26 +51339,91 @@ if (typeof window !== 'undefined') {
   _extend$hexToRgb$isIE8$logStr$colorLuminance.logStr('SweetAlert is a frontend module!');
 }
 module.exports = exports['default'];
-},{"./modules/default-params":12,"./modules/handle-click":13,"./modules/handle-dom":14,"./modules/handle-key":15,"./modules/handle-swal-dom":16,"./modules/set-params":18,"./modules/utils":19}],21:[function(require,module,exports){
+},{"./modules/default-params":14,"./modules/handle-click":15,"./modules/handle-dom":16,"./modules/handle-key":17,"./modules/handle-swal-dom":18,"./modules/set-params":20,"./modules/utils":21}],23:[function(require,module,exports){
 'use strict';
 
 // dependencies
-
 var $ = window.jQuery = require('jquery');
 require('bootstrap-sass');
 require('metismenu');
 var angular = require('angular');
-var ngAnimate = require('angular-animate');
+require('angular-animate');
 require('angular-toastr');
 require('angular-ui-router');
 require('sweetalert');
 require('angular-sweetalert');
+require('angular-loading-bar');
 
 // app
 $('#menu').metisMenu();
-angular.module('adminApp', ['ui.router', 'toastr', 'oitozero.ngSweetAlert', ngAnimate]).config(require('./routes.js')).service('UserService', require('./users/UserService'));
 
-},{"./routes.js":22,"./users/UserService":25,"angular":8,"angular-animate":2,"angular-sweetalert":3,"angular-toastr":5,"angular-ui-router":6,"bootstrap-sass":9,"jquery":10,"metismenu":11,"sweetalert":20}],22:[function(require,module,exports){
+angular.module('adminApp', ['ui.router', 'ngAnimate', 'toastr', 'oitozero.ngSweetAlert', 'angular-loading-bar']).config(require('./routes.js')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService'));
+
+},{"./roles/RoleService":26,"./routes.js":27,"./users/UserService":31,"angular":10,"angular-animate":2,"angular-loading-bar":4,"angular-sweetalert":5,"angular-toastr":7,"angular-ui-router":8,"bootstrap-sass":11,"jquery":12,"metismenu":13,"sweetalert":22}],24:[function(require,module,exports){
+'use strict';
+
+module.exports = function (RoleService, $state, toastr) {
+  'ngInject';
+  var vm = this;
+
+  vm.data = {
+    name: '',
+    label: ''
+  };
+
+  vm.errors = {};
+
+  vm.formIsSubmit = false;
+
+  this.hasError = function (property) {
+    if (vm.errors.hasOwnProperty(property)) {
+      return true;
+    }
+    return false;
+  };
+
+  this.submitForm = function () {
+    vm.formIsSubmit = true;
+
+    RoleService.createRole(vm.data).then(function (data) {
+      toastr.success(data.data.message, 'Estado!');
+      $state.go('roles');
+    })['catch'](function (errors) {
+      vm.errors = errors.data;
+    })['finally'](function () {
+      vm.formIsSubmit = false;
+    });
+  };
+};
+
+},{}],25:[function(require,module,exports){
+"use strict";
+
+module.exports = function (RoleService) {
+  var vm = this;
+  this.roles = [];
+
+  RoleService.getRoles().then(function (data) {
+    vm.roles = data.data;
+  });
+};
+
+},{}],26:[function(require,module,exports){
+'use strict';
+
+module.exports = function ($http) {
+  'ngInject';
+
+  this.getRoles = function () {
+    return $http.get('/admin/roles');
+  };
+
+  this.createRole = function (data) {
+    return $http.post('/admin/roles', data);
+  };
+};
+
+},{}],27:[function(require,module,exports){
 'use strict';
 
 module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
@@ -51036,23 +51436,56 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
 
   // users
   $stateProvider.state('users', {
-    url: '',
+    url: '/users',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
     templateUrl: '/views/admin/users/index.html',
+    resolve: {
+      users: function users(UserService) {
+        return UserService.getUsers().then(function (data) {
+          return data.data;
+        });
+      }
+    },
     title: 'Users'
   }).state('users-create', {
-    url: '/create',
+    url: '/user/create',
     controller: require('./users/CreateController'),
     controllerAs: 'vm',
     templateUrl: '/views/admin/users/create.html',
     title: 'Users'
+  }).state('users-edit', {
+    url: '/user/edit/:id',
+    controller: require('./users/EditController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/users/edit.html',
+    resolve: {
+      data: function data(UserService, $stateParams) {
+        return UserService.getUser($stateParams.id).then(function (data) {
+          return data.data;
+        });
+      }
+    }
   });
 
-  //
+  $stateProvider.state('roles', {
+    url: '/roles',
+    controller: require('./roles/ListController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/roles/index.html',
+    title: 'Roles'
+  }).state('roles-create', {
+    url: '/roles/create',
+    controller: require('./roles/CreateController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/roles/create.html',
+    title: 'Roles'
+  });
+
+  $urlRouterProvider.otherwise('/admin');
 };
 
-},{"./users/CreateController":23,"./users/ListController":24}],23:[function(require,module,exports){
+},{"./roles/CreateController":24,"./roles/ListController":25,"./users/CreateController":28,"./users/EditController":29,"./users/ListController":30}],28:[function(require,module,exports){
 'use strict';
 
 module.exports = function (UserService, $state, toastr) {
@@ -51091,18 +51524,51 @@ module.exports = function (UserService, $state, toastr) {
   };
 };
 
-},{}],24:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
-module.exports = function (UserService, toastr, SweetAlert) {
+module.exports = function (data, UserService, $state, $stateParams, toastr) {
+  'ngInject';
+  var vm = this;
+
+  vm.data = data;
+  vm.errors = {};
+
+  vm.formIsSubmit = false;
+
+  this.hasError = function (property) {
+    if (vm.errors.hasOwnProperty(property)) {
+      return true;
+    }
+    return false;
+  };
+
+  this.submitForm = function () {
+    vm.formIsSubmit = true;
+
+    UserService.updateUser(vm.getId(), vm.data).then(function (data) {
+      toastr.success(data.data.message, 'Estado!');
+      $state.go('users');
+    })['catch'](function (errors) {
+      vm.errors = errors.data;
+    })['finally'](function () {
+      vm.formIsSubmit = false;
+    });
+  };
+
+  this.getId = function () {
+    return $stateParams.id;
+  };
+};
+
+},{}],30:[function(require,module,exports){
+'use strict';
+
+module.exports = function (users, UserService, toastr, SweetAlert) {
   'ngInject';
 
   var vm = this;
-  this.users = [];
-
-  UserService.getUsers().then(function (data) {
-    vm.users = data.data;
-  });
+  this.users = users;
 
   this.destroy = function (data, index) {
     SweetAlert.swal({
@@ -51134,25 +51600,33 @@ module.exports = function (UserService, toastr, SweetAlert) {
   };
 };
 
-},{}],25:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
-module.exports = function ($http) {
+module.exports = function ($http, $q) {
   'ngInject';
 
   this.getUsers = function () {
-    return $http.get('/admin/users/all');
+    return $http.get('/admin/users');
   };
 
   this.createUser = function (data) {
-    return $http.post('/admin/users', data);
+    return $http.post('/admin/users', data, { ignoreLoadingBar: true });
   };
 
   this.deleteUser = function (id) {
     return $http['delete']('/admin/users/' + id);
   };
+
+  this.updateUser = function (id, data) {
+    return $http.put('/admin/users/' + id, data, { ignoreLoadingBar: true });
+  };
+
+  this.getUser = function (id) {
+    return $http.get('/admin/users/' + id);
+  };
 };
 
-},{}]},{},[21]);
+},{}]},{},[23]);
 
 //# sourceMappingURL=admin.js.map

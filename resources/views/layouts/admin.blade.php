@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- <base href="/"> -->
+    <!-- <base href="/admin#/"> -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +24,7 @@
         }
     </style>
 </head>
-<body id="app-layout" ng-app="adminApp">
+<body id="app-layout" ng-app="adminApp" class='ng-cloak'>
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
@@ -79,15 +79,15 @@
                         </a>
                         <ul aria-expanded="true" class="collapse in">
                             <li>
-                                <a href="/admin/users">
+                                <a ui-sref="users" ui-sref-active-eq="active">
                                     <span class="sidebar-nav-item-icon fa fa-users"></span>
                                     Usuarios
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a ui-sref="roles" ui-sref-active-eq="active">
                                     <span class="sidebar-nav-item-icon fa fa-key"></span>
-                                    Permisos
+                                    Roles
                                 </a>
                             </li>
                         </ul>
@@ -97,7 +97,9 @@
         </aside>
 
         <section class="content container">
-            @yield('content')
+            <div class='col-xs-12'>
+                <div ui-view></div>
+            </div>
         </section >
     </div>
 

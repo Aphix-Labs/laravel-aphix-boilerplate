@@ -24,6 +24,7 @@ elixir(function(mix) {
   mix.styles([
     '../../../node_modules/metismenu/dist/metisMenu.css',
     '../../../node_modules/angular-toastr/dist/angular-toastr.css',
+    '../../../node_modules/angular-loading-bar/build/loading-bar.css',
     'admin/admin.css'
   ], 'public/css/admin.css');
 

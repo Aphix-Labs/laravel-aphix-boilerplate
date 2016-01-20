@@ -1,12 +1,8 @@
-module.exports = function (UserService, toastr, SweetAlert) {
+module.exports = function (users, UserService, toastr, SweetAlert) {
   'ngInject';
 
   var vm = this;
-  this.users = [];
-
-  UserService.getUsers().then(function(data) {
-    vm.users = data.data;
-  });
+  this.users = users;
 
   this.destroy = function (data, index) {
     SweetAlert.swal({

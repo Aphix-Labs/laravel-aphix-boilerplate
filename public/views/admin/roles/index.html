@@ -1,0 +1,29 @@
+<div class='row'>
+    <div class='pull-right'>
+        <a ui-sref="roles-create" class='btn btn-primary'>Nuevo Rol</a>
+    </div>
+</div>
+<br>
+
+<div class='row'>
+    <div class="panel panel-default">
+        <div class="panel-heading">Roles</div>
+
+        <div class="panel-body">
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Nombre publico o legible</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="rol in vm.roles">
+                        <td>{{ rol.name }}</td>
+                        <td>{{ rol.label }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

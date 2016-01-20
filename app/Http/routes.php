@@ -13,12 +13,15 @@ Route::group(['middleware' => 'web'], function () {
 
 // admin
 Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 'prefix' => 'admin'], function () {
-    // views
+    // base view
     Route::get('/', 'AdminController@index');
-    Route::get('users', 'UsersController@index');
 
     // actions
-    Route::get('users/all', 'UsersController@all');
+    Route::get('users', 'UsersController@index');
+    Route::get('users/{id}', 'UsersController@show');
     Route::post('users', 'UsersController@store');
+    Route::put('users/{id}', 'UsersController@update');
     Route::delete('users/{id}', 'UsersController@destroy');
+    Route::get('roles', 'RolesController@index');
+    Route::post('roles', 'RolesController@store');
 });

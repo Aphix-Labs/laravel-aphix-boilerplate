@@ -6,6 +6,7 @@
   "dependencies": {
     "angular": "^1.4.8",
     "angular-animate": "^1.4.8",
+    "angular-loading-bar": "^0.8.0",
     "angular-sweetalert": "^1.1.0",
     "angular-toastr": "^1.6.0",
     "angular-ui-router": "^0.2.15",

@@ -5,7 +5,7 @@
         <div class="panel-heading">Dashboard</div>
 
         <div class="panel-body">
-            Admin
+            Home Admin
         </div>
     </div>
 @endsection

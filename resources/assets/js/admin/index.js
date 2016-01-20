@@ -1,7 +1,6 @@
 'use strict';
 
 // dependencies
-
 var $ = window.jQuery = require('jquery');
 require('bootstrap-sass');
 require('metismenu');
@@ -12,8 +11,9 @@ require('angular-ui-router');
 
 // app
 $('#menu').metisMenu();
-angular
 
+angular
 .module('adminApp', ['ui.router', 'toastr', ngAnimate])
 .config(require('./routes.js'))
-.service('UserService', require('./users/UserService'));
+.service('UserService', require('./users/UserService'))
+.service('RoleService', require('./roles/RoleService'));

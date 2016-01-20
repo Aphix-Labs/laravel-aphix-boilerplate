@@ -50317,7 +50317,6 @@ return jQuery;
 'use strict';
 
 // dependencies
-
 var $ = window.jQuery = require('jquery');
 require('bootstrap-sass');
 require('metismenu');
@@ -50328,9 +50327,74 @@ require('angular-ui-router');
 
 // app
 $('#menu').metisMenu();
-angular.module('adminApp', ['ui.router', 'toastr', ngAnimate]).config(require('./routes.js')).service('UserService', require('./users/UserService'));
 
-},{"./routes.js":12,"./users/UserService":15,"angular":7,"angular-animate":2,"angular-toastr":4,"angular-ui-router":5,"bootstrap-sass":8,"jquery":9,"metismenu":10}],12:[function(require,module,exports){
+angular.module('adminApp', ['ui.router', 'toastr', ngAnimate]).config(require('./routes.js')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService'));
+
+},{"./roles/RoleService":14,"./routes.js":15,"./users/UserService":18,"angular":7,"angular-animate":2,"angular-toastr":4,"angular-ui-router":5,"bootstrap-sass":8,"jquery":9,"metismenu":10}],12:[function(require,module,exports){
+'use strict';
+
+module.exports = function (RoleService, $state, toastr) {
+  'ngInject';
+  var vm = this;
+
+  vm.data = {
+    name: '',
+    label: ''
+  };
+
+  vm.errors = {};
+
+  vm.formIsSubmit = false;
+
+  this.hasError = function (property) {
+    if (vm.errors.hasOwnProperty(property)) {
+      return true;
+    }
+    return false;
+  };
+
+  this.submitForm = function () {
+    vm.formIsSubmit = true;
+
+    RoleService.createRole(vm.data).then(function (data) {
+      toastr.success(data.data.message, 'Estado!');
+      $state.go('roles');
+    })['catch'](function (errors) {
+      vm.errors = errors.data;
+    })['finally'](function () {
+      vm.formIsSubmit = false;
+    });
+  };
+};
+
+},{}],13:[function(require,module,exports){
+"use strict";
+
+module.exports = function (RoleService) {
+  var vm = this;
+  this.roles = [];
+
+  RoleService.getRoles().then(function (data) {
+    vm.roles = data.data;
+  });
+};
+
+},{}],14:[function(require,module,exports){
+'use strict';
+
+module.exports = function ($http) {
+  'ngInject';
+
+  this.getRoles = function () {
+    return $http.get('/admin/roles');
+  };
+
+  this.createRole = function (data) {
+    return $http.post('/admin/roles', data);
+  };
+};
+
+},{}],15:[function(require,module,exports){
 'use strict';
 
 module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
@@ -50343,23 +50407,37 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
 
   // users
   $stateProvider.state('users', {
-    url: '',
+    url: '/users',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
     templateUrl: '/views/admin/users/index.html',
     title: 'Users'
   }).state('users-create', {
-    url: '/create',
+    url: '/user/create',
     controller: require('./users/CreateController'),
     controllerAs: 'vm',
     templateUrl: '/views/admin/users/create.html',
     title: 'Users'
   });
 
-  //
+  $stateProvider.state('roles', {
+    url: '/roles',
+    controller: require('./roles/ListController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/roles/index.html',
+    title: 'Roles'
+  }).state('roles-create', {
+    url: '/roles/create',
+    controller: require('./roles/CreateController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/roles/create.html',
+    title: 'Roles'
+  });
+
+  $urlRouterProvider.otherwise('/admin');
 };
 
-},{"./users/CreateController":13,"./users/ListController":14}],13:[function(require,module,exports){
+},{"./roles/CreateController":12,"./roles/ListController":13,"./users/CreateController":16,"./users/ListController":17}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = function (UserService, $state, toastr) {
@@ -50398,7 +50476,7 @@ module.exports = function (UserService, $state, toastr) {
   };
 };
 
-},{}],14:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 
 module.exports = function (UserService) {
@@ -50410,14 +50488,14 @@ module.exports = function (UserService) {
   });
 };
 
-},{}],15:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 module.exports = function ($http) {
   'ngInject';
 
   this.getUsers = function () {
-    return $http.get('/admin/users/all');
+    return $http.get('/admin/users');
   };
 
   this.createUser = function (data) {

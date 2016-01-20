@@ -1,14 +1,29 @@
-<table class='table'>
-    <thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="user in vm.users">
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-        </tr>
-    </tbody>
-</table>
+<div class='row'>
+    <div class='pull-right'>
+        <a ui-sref="users-create" class='btn btn-primary'>Nuevo Usuario</a>
+    </div>
+</div>
+<br>
+
+<div class='row'>
+    <div class="panel panel-default">
+        <div class="panel-heading">Usuarios</div>
+
+        <div class="panel-body">
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="user in vm.users">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

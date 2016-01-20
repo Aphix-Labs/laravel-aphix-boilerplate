@@ -2,7 +2,7 @@ module.exports = function ($http) {
   'ngInject';
 
   this.getUsers = function () {
-    return $http.get('/admin/users/all');
+    return $http.get('/admin/users');
   };
 
   this.createUser = function(data) {

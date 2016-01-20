@@ -18,7 +18,9 @@ Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 
 
     // actions
     Route::get('users', 'UsersController@index');
+    Route::get('users/{id}', 'UsersController@show');
     Route::post('users', 'UsersController@store');
+    Route::put('users/{id}', 'UsersController@update');
     Route::get('roles', 'RolesController@index');
     Route::post('roles', 'RolesController@store');
 });

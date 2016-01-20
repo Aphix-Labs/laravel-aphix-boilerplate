@@ -5,30 +5,32 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\User;
 
-class UsersController extends Controller
+class UsersController extends ApiController
 {
-    public function index()
+
+    public function __construct(User $user)
     {
-        return User::all();
+        $this->repository = $user;
     }
 
-    public function store(Request $request)
+    protected function rulesStore()
     {
-        $this->validate($request, [
+        return [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
-        ]);
+        ];
+    }
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        return response()->json(['message' => 'Usuario creado satisfatoriamente']);
+    protected function rulesUpdate($id)
+    {
+        return [
+            'name' => 'sometimes|required|max:255',
+            'email' => 'sometimes|required|email|max:255|unique:users,email,' . $id,
+            'password' => 'sometimes|required|confirmed|min:6',
+        ];
     }
 }

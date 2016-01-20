@@ -21,6 +21,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     templateUrl: '/views/admin/users/create.html',
     title: 'Users',
+  })
+  .state('users-edit', {
+    url: '/user/edit/:id',
+    controller: require('./users/EditController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/users/edit.html',
+    title: 'Users',
   });
 
   $stateProvider

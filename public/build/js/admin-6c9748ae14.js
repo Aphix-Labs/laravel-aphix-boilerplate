@@ -50330,7 +50330,7 @@ $('#menu').metisMenu();
 
 angular.module('adminApp', ['ui.router', 'toastr', ngAnimate]).config(require('./routes.js')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService'));
 
-},{"./roles/RoleService":14,"./routes.js":15,"./users/UserService":18,"angular":7,"angular-animate":2,"angular-toastr":4,"angular-ui-router":5,"bootstrap-sass":8,"jquery":9,"metismenu":10}],12:[function(require,module,exports){
+},{"./roles/RoleService":14,"./routes.js":15,"./users/UserService":19,"angular":7,"angular-animate":2,"angular-toastr":4,"angular-ui-router":5,"bootstrap-sass":8,"jquery":9,"metismenu":10}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = function (RoleService, $state, toastr) {
@@ -50418,6 +50418,12 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     templateUrl: '/views/admin/users/create.html',
     title: 'Users'
+  }).state('users-edit', {
+    url: '/user/edit/:id',
+    controller: require('./users/EditController'),
+    controllerAs: 'vm',
+    templateUrl: '/views/admin/users/edit.html',
+    title: 'Users'
   });
 
   $stateProvider.state('roles', {
@@ -50437,7 +50443,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
   $urlRouterProvider.otherwise('/admin');
 };
 
-},{"./roles/CreateController":12,"./roles/ListController":13,"./users/CreateController":16,"./users/ListController":17}],16:[function(require,module,exports){
+},{"./roles/CreateController":12,"./roles/ListController":13,"./users/CreateController":16,"./users/EditController":17,"./users/ListController":18}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = function (UserService, $state, toastr) {
@@ -50477,6 +50483,57 @@ module.exports = function (UserService, $state, toastr) {
 };
 
 },{}],17:[function(require,module,exports){
+'use strict';
+
+module.exports = function (UserService, $state, $stateParams, toastr) {
+  'ngInject';
+  var vm = this;
+
+  vm.data = {
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: ''
+  };
+
+  vm.errors = {};
+
+  vm.formIsSubmit = false;
+
+  this.hasError = function (property) {
+    if (vm.errors.hasOwnProperty(property)) {
+      return true;
+    }
+    return false;
+  };
+
+  this.submitForm = function () {
+    vm.formIsSubmit = true;
+
+    UserService.updateUser(vm.getId(), vm.data).then(function (data) {
+      toastr.success(data.data.message, 'Estado!');
+      $state.go('users');
+    })['catch'](function (errors) {
+      vm.errors = errors.data;
+    })['finally'](function () {
+      vm.formIsSubmit = false;
+    });
+  };
+
+  this.fetchUser = function (id) {
+    UserService.getUser(id).then(function (data) {
+      vm.data = data.data;
+    });
+  };
+
+  this.getId = function () {
+    return $stateParams.id;
+  };
+
+  this.fetchUser(this.getId());
+};
+
+},{}],18:[function(require,module,exports){
 "use strict";
 
 module.exports = function (UserService) {
@@ -50488,7 +50545,7 @@ module.exports = function (UserService) {
   });
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 module.exports = function ($http) {
@@ -50500,6 +50557,14 @@ module.exports = function ($http) {
 
   this.createUser = function (data) {
     return $http.post('/admin/users', data);
+  };
+
+  this.updateUser = function (id, data) {
+    return $http.put('/admin/users/' + id, data);
+  };
+
+  this.getUser = function (id) {
+    return $http.get('/admin/users/' + id);
   };
 };
 

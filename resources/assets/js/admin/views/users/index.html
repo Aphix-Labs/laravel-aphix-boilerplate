@@ -15,12 +15,16 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Email</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="user in vm.users">
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
+                        <td>
+                            <a ui-sref="users-edit({id: user.id})">Editar</a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

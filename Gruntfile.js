@@ -5,9 +5,16 @@ module.exports = function(grunt) {
       options: {
         config: '.jscsrc'
       }
+    },
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      all: ['resources/**/*.js', 'gulpfile.js'],
     }
   });
 
   grunt.loadNpmTasks('grunt-jscs');
-  grunt.registerTask('default', ['jscs']);
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.registerTask('default', ['jscs', 'jshint']);
 };

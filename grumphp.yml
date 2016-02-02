@@ -10,3 +10,8 @@ parameters:
       sniffs: []
     phpunit:
       config_file: ~
+    grunt:
+      grunt_file: ~
+      task: ~
+      triggered_by: [js]
+

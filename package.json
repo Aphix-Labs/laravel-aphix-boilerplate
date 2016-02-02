@@ -1,6 +1,8 @@
 {
   "private": true,
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-jscs": "^2.7.0",
     "gulp": "^3.8.8"
   },
   "dependencies": {

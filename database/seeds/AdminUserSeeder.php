@@ -20,7 +20,7 @@ class AdminUserSeeder extends Seeder
         factory(App\User::class)->create([
             'name' => 'admin',
             'email' => 'admin@admin.cl',
-            'password' => bcrypt(123)
+            'password' => 123
         ])->assignRole('admin');
     }
 }

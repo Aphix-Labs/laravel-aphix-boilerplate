@@ -30,9 +30,6 @@ elixir(function(mix) {
 
   mix.browserify('admin/index.js', 'public/js/admin.js');
 
-  // angular templates
-  mix.copy('resources/assets/js/admin/views', 'public/views/admin/');
-
   mix.version([
     'css/public.css',
     'js/public.js',

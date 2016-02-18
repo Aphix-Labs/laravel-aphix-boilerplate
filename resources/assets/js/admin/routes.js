@@ -12,7 +12,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/users',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
-    templateUrl: '/views/admin/users/index.html',
+    template: require('./views/users/index.html'),
     resolve: {
       users: function(UserService) {
         return UserService.getUsers().then(function(data) {
@@ -26,14 +26,14 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/user/create',
     controller: require('./users/CreateController'),
     controllerAs: 'vm',
-    templateUrl: '/views/admin/users/create.html',
+    template: require('./views/users/create.html'),
     title: 'Users',
   })
   .state('users-edit', {
     url: '/user/edit/:id',
     controller: require('./users/EditController'),
     controllerAs: 'vm',
-    templateUrl: '/views/admin/users/edit.html',
+    template: require('./views/users/edit.html'),
     resolve: {
       data: function(UserService, $stateParams) {
         return UserService.getUser($stateParams.id).then(function(data) {
@@ -48,14 +48,14 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/roles',
     controller: require('./roles/ListController'),
     controllerAs: 'vm',
-    templateUrl: '/views/admin/roles/index.html',
+    template: require('./views/roles/index.html'),
     title: 'Roles',
   })
   .state('roles-create', {
     url: '/roles/create',
     controller: require('./roles/CreateController'),
     controllerAs: 'vm',
-    templateUrl: '/views/admin/roles/create.html',
+    template: require('./views/roles/create.html'),
     title: 'Roles',
   });
 

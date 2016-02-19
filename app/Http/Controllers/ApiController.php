@@ -29,9 +29,14 @@ abstract class ApiController extends Controller
     {
         $this->validate($request, $this->rulesStore());
 
-        $this->repository->create($request->all());
+        $this->create($request);
 
         return response()->json(['message' => $this->storeMessage()]);
+    }
+
+    public function create($request)
+    {
+        return $this->repository->create($request->all());
     }
 
     public function update($id, Request $request)

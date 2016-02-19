@@ -11,12 +11,6 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
-        // create admin role
-        factory(App\Role::class)->create([
-            'name' => 'admin',
-            'label' => 'Administrador del sistema'
-        ]);
-
         factory(App\User::class)->create([
             'name' => 'admin',
             'email' => 'admin@admin.cl',

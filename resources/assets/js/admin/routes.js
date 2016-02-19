@@ -64,6 +64,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/roles/create.html'),
     title: 'Roles',
+    resolve: {
+      permissions: function(PermissionService) {
+        return PermissionService.all().then(function(data) {
+          return data.data;
+        });
+      }
+    }
   })
   .state('roles-edit', {
     url: '/roles/edit/:id',

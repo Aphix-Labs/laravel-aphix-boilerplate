@@ -1,22 +1,12 @@
-module.exports = function (users, UserService, toastr, SweetAlert) {
+module.exports = function (users, UserService, toastr, Confirm) {
   'ngInject';
 
   var vm = this;
   this.users = users;
 
-  this.destroy = function (data, index) {
-    SweetAlert.swal({
-      title: 'Esta seguro de eliminar?',
-      text: 'No sera capaz de recuperar el registro!',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#DD6B55',
-      confirmButtonText: 'Si, eliminalo!',
-      closeOnConfirm: true,
-    }, function(isConfirm) {
-      if (isConfirm) {
-        vm.deleteUser(data, index);
-      }
+  this.destroy = function (id, index) {
+    Confirm.destroy(function() {
+      vm.deleteUser(id, index);
     });
   };
 

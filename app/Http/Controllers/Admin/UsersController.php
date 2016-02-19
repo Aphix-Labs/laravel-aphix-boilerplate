@@ -33,13 +33,4 @@ class UsersController extends ApiController
             'password' => 'sometimes|required|confirmed|min:6',
         ];
     }
-
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-
-        $user->delete();
-
-        return response()->json(['message' => 'Usuario eliminado satisfatoriamente']);
-    }
 }

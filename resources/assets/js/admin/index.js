@@ -24,4 +24,5 @@ angular.module('adminApp', [
 ])
 .config(require('./routes.js'))
 .service('UserService', require('./users/UserService'))
-.service('RoleService', require('./roles/RoleService'));
+.service('RoleService', require('./roles/RoleService'))
+.service('Confirm', require('./helpers/Confirm'));

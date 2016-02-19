@@ -1,20 +1,10 @@
-module.exports = function (roles, RoleService, toastr, SweetAlert) {
+module.exports = function (roles, RoleService, toastr, Confirm) {
   var vm = this;
   vm.roles = roles;
 
   vm.destroy = function (data, index) {
-    SweetAlert.swal({
-      title: 'Esta seguro de eliminar?',
-      text: 'No sera capaz de recuperar el registro!',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#DD6B55',
-      confirmButtonText: 'Si, eliminalo!',
-      closeOnConfirm: true,
-    }, function(isConfirm) {
-      if (isConfirm) {
-        vm.deleteRole(data, index);
-      }
+    Confirm.destroy(function() {
+      vm.deleteRole(data, index);
     });
   };
 

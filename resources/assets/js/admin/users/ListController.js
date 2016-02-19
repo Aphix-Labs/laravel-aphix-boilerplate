@@ -20,8 +20,8 @@ module.exports = function (users, UserService, toastr, SweetAlert) {
     });
   };
 
-  this.deleteUser = function (data, index) {
-    UserService.deleteUser(data)
+  this.deleteUser = function (id, index) {
+    UserService.deleteUser(id)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
       vm.removeFromUsers(index);

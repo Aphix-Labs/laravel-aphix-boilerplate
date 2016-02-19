@@ -15,11 +15,6 @@ abstract class ApiController extends Controller
 
     abstract protected function rulesUpdate($id);
 
-    protected $messageStore = 'Creación exitosa!';
-
-    protected $messageUpdate = 'Edición exitosa!';
-
-
     public function index()
     {
         return $this->repository->all();
@@ -36,19 +31,43 @@ abstract class ApiController extends Controller
 
         $this->repository->create($request->all());
 
-        return response()->json(['message' => $this->messageStore]);
+        return response()->json(['message' => $this->storeMessage()]);
     }
 
     public function update($id, Request $request)
     {
         $this->validate($request, $this->rulesUpdate($id));
 
-        $user = $this->repository->findOrFail($id);
+        $entity = $this->repository->findOrFail($id);
 
-        $user->fill($request->all());
+        $entity->fill($request->all());
 
-        $user->save();
+        $entity->save();
 
-        return response()->json(['message' => $this->messageUpdate]);
+        return response()->json(['message' => $this->updateMessage()]);
+    }
+
+    public function destroy($id)
+    {
+        $entity = $this->repository->findOrFail($id);
+
+        $entity->delete();
+
+        return response()->json(['message' => $this->destroyMessage()]);
+    }
+
+    protected function storeMessage()
+    {
+        return 'Creación exitosa!';
+    }
+
+    protected function updateMessage()
+    {
+        return 'Edición exitosa!';
+    }
+
+    protected function destroyMessage()
+    {
+        return 'Eliminación exitosa!';
     }
 }

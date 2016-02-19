@@ -1,0 +1,47 @@
+<div class='row'>
+    <div class="panel panel-default">
+        <div class="panel-heading">Editar Roles</div>
+
+        <div class="panel-body">
+
+        <form class="form-horizontal" role="form" method="POST">
+
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('name')}">
+                <label class="col-md-4 control-label">Name</label>
+
+                <div class="col-md-6">
+                    <input type="text" class="form-control" ng-model="vm.role.name">
+
+                    <span ng-if="vm.hasError('name')" class="help-block">
+                        <strong>{{ vm.errors.name[0] }}</strong>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('label')}">
+                <label class="col-md-4 control-label">Nombre legible</label>
+
+                <div class="col-md-6">
+                    <input type="text" class="form-control" ng-model="vm.role.label">
+
+                    <span ng-if="vm.hasError('label')" class="help-block">
+                        <strong>{{ vm.errors.label[0] }}</strong>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6 col-md-offset-4">
+                    <button ng-click="vm.submitForm()" class="btn btn-primary">
+                        <i ng-class="{'fa-user': !vm.formIsSubmit, 'fa-spinner fa-spin': vm.formIsSubmit }" class="fa fa-btn "></i> Editar
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        </div>
+    </div>
+</div>

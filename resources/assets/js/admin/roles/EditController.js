@@ -1,7 +1,7 @@
-module.exports = function (data, UserService, $state, $stateParams, toastr) {
+module.exports = function (role, RoleService, $state, $stateParams, toastr) {
   'ngInject';
   var vm = this;
-  vm.data =  data;
+  vm.role =  role;
   vm.errors = {};
 
   vm.formIsSubmit = false;
@@ -16,10 +16,10 @@ module.exports = function (data, UserService, $state, $stateParams, toastr) {
   this.submitForm = function () {
     vm.formIsSubmit = true;
 
-    UserService.updateUser(vm.getId(), vm.data)
-    .then(function(data) {
-      toastr.success(data.data.message, 'Estado!');
-      $state.go('users');
+    RoleService.updateRole(vm.role)
+    .then(function(role) {
+      toastr.success(role.data.message, 'Estado!');
+      $state.go('roles');
     })
     .catch(function(errors) {
       vm.errors = errors.data;

@@ -1,30 +1,30 @@
 <div class='row'>
     <div class='pull-right'>
-        <a ui-sref="roles-create" class='btn btn-primary'>Nuevo Rol</a>
+        <a ui-sref="users-create" class='btn btn-primary'>Nuevo Usuario</a>
     </div>
 </div>
 <br>
 
 <div class='row'>
     <div class="panel panel-default">
-        <div class="panel-heading">Roles</div>
+        <div class="panel-heading">Usuarios</div>
 
         <div class="panel-body">
             <table class='table'>
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Nombre publico o legible</th>
+                        <th>Email</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="role in vm.roles">
-                        <td>{{ role.name }}</td>
-                        <td>{{ role.label }}</td>
+                    <tr ng-repeat="user in vm.users">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
                         <td>
-                            <a ui-sref="roles-edit({id: role.id})" class="btn btn-success btn-sm">Editar</a>
-                            <a ng-click="vm.destroy(role.id, $index)" class="btn btn-danger btn-sm">Eliminar</a>
+                            <a ui-sref="users-edit({id: user.id})" class="btn btn-success btn-sm">Editar</a>
+                            <a ng-click="vm.destroy(user.id, $index)" class='btn btn-danger btn-sm'>Eliminar</a>
                         </td>
                     </tr>
                 </tbody>

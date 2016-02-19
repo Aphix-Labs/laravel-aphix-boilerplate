@@ -50,6 +50,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/roles/index.html'),
     title: 'Roles',
+    resolve: {
+      roles: function(RoleService) {
+        return RoleService.getRoles().then(function(data) {
+          return data.data;
+        });
+      }
+    }
   })
   .state('roles-create', {
     url: '/roles/create',
@@ -57,6 +64,19 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/roles/create.html'),
     title: 'Roles',
+  })
+  .state('roles-edit', {
+    url: '/roles/edit/:id',
+    controller: require('./roles/EditController'),
+    controllerAs: 'vm',
+    template: require('./views/roles/edit.html'),
+    resolve: {
+      role: function(RoleService, $stateParams) {
+        return RoleService.getRole($stateParams.id).then(function(data) {
+          return data.data;
+        });
+      }
+    },
   });
 
   $urlRouterProvider.otherwise('/admin');

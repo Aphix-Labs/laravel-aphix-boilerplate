@@ -104,6 +104,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'label' => 'nombre legible',
+        'name'  => 'nombre'
+    ],
 
 ];

@@ -5,28 +5,29 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Role;
 
-class RolesController extends Controller
+class RolesController extends ApiController
 {
-    public function index()
+    public function __construct(Role $role)
     {
-        return Role::all();
+        $this->repository = $role;
     }
 
-    public function store(Request $request)
+    protected function rulesStore()
     {
-        $this->validate($request, [
+        return [
             'name' => 'required|max:255|unique:roles',
             'label' => 'required|max:255',
-        ]);
+        ];
+    }
 
-        Role::create([
-            'name' => $request->name,
-            'label' => $request->label,
-        ]);
-
-        return response()->json(['message' => 'Rol creado satisfatoriamente']);
+    protected function rulesUpdate($id)
+    {
+        return [
+            'name' => 'sometimes|required|max:255|unique:roles,name,' . $id,
+            'label' => 'sometimes|required|max:255',
+        ];
     }
 }

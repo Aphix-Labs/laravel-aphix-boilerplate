@@ -1,0 +1,69 @@
+<div class='row'>
+    <div class="panel panel-default">
+        <div class="panel-heading">Nuevo Usuario</div>
+
+        <div class="panel-body">
+
+        <form class="form-horizontal" role="form" method="POST">
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('name')}">
+                <label class="col-md-4 control-label">Name</label>
+
+                <div class="col-md-6">
+                    <input type="text" class="form-control" ng-model="vm.data.name">
+
+                    <span ng-if="vm.hasError('name')" class="help-block">
+                        <strong>{{ vm.errors.name[0] }}</strong>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('email')}">
+                <label class="col-md-4 control-label">E-Mail Address</label>
+
+                <div class="col-md-6">
+                    <input type="email" class="form-control" ng-model="vm.data.email">
+
+                    <span ng-if="vm.hasError('email')" class="help-block">
+                        <strong>{{ vm.errors.email[0] }}</strong>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('password')}">
+                <label class="col-md-4 control-label">Password</label>
+
+                <div class="col-md-6">
+                    <input type="password" class="form-control" ng-model="vm.data.password">
+
+                    <span ng-if="vm.hasError('password')" class="help-block">
+                        <strong>{{ vm.errors.password[0] }}</strong>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('password_confirmation')}">
+                <label class="col-md-4 control-label">Confirm Password</label>
+
+                <div class="col-md-6">
+                    <input type="password" class="form-control" ng-model="vm.data.password_confirmation">
+
+                    <span ng-if="vm.hasError('password_confirmation')" class="help-block">
+                        <strong>{{ vm.errors.password_confirmation[0] }}</strong>
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6 col-md-offset-4">
+                    <button ng-click="vm.submitForm()" class="btn btn-primary">
+                        <i ng-class="{'fa-user': !vm.formIsSubmit, 'fa-spinner fa-spin': vm.formIsSubmit }" class="fa fa-btn "></i> Crear
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        </div>
+    </div>
+</div>

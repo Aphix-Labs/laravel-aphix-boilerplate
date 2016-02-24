@@ -91,6 +91,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'roles.*' => [
+            'exists' => 'Uno o más roles no existen en los registros.',
+        ]
     ],
 
     /*

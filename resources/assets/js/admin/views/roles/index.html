@@ -27,6 +27,7 @@
                             <span class="label label-primary" ng-repeat="permission in role.permissions">
                                 {{ permission.label }}
                             </span>
+                        </td>
                         <td>
                             <a ui-sref="roles-edit({id: role.id})" class="btn btn-success btn-sm">Editar</a>
                             <a ng-click="vm.destroy(role.id, $index)" class="btn btn-danger btn-sm">Eliminar</a>

@@ -22,6 +22,7 @@ class UsersController extends ApiController
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
+            'roles.*' => 'exists:roles,id'
         ];
     }
 
@@ -32,5 +33,35 @@ class UsersController extends ApiController
             'email' => 'sometimes|required|email|max:255|unique:users,email,' . $id,
             'password' => 'sometimes|required|confirmed|min:6',
         ];
+    }
+
+    public function index()
+    {
+        return $this->repository->rolesOnly(['label'])->get();
+    }
+
+    public function show($id)
+    {
+        $user = $this->repository->findOrFail($id);
+
+        $user->roles = $user->rolesId();
+
+        return $user;
+    }
+
+    public function insert(Request $request)
+    {
+        $entity = $this->repository->create($request->all());
+
+        $entity->syncRoles($request['roles']);
+    }
+
+    public function dbUpdate($entity, Request $request)
+    {
+        $entity->fill($request->all());
+
+        $entity->save();
+
+        $entity->syncRoles($request['roles']);
     }
 }

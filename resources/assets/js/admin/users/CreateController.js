@@ -1,4 +1,4 @@
-module.exports = function (UserService, $state, toastr) {
+module.exports = function (roles, UserService, $state, toastr) {
   'ngInject';
   var vm = this;
 
@@ -6,8 +6,11 @@ module.exports = function (UserService, $state, toastr) {
     name:  '',
     email: '',
     password: '',
-    password_confirmation: ''
+    password_confirmation: '',
+    roles: []
   };
+
+  vm.roles = roles;
 
   vm.errors = {};
 

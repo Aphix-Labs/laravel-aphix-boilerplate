@@ -1,7 +1,8 @@
-module.exports = function (data, UserService, $state, $stateParams, toastr) {
+module.exports = function (data, roles, UserService, $state, $stateParams, toastr) {
   'ngInject';
   var vm = this;
   vm.data =  data;
+  vm.roles = roles;
   vm.errors = {};
 
   vm.formIsSubmit = false;

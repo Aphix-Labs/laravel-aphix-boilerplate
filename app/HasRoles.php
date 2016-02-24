@@ -53,4 +53,23 @@ trait HasRoles
     {
         return $this->hasRole($permission->roles);
     }
+
+    public function syncRoles(array $rolesId)
+    {
+        $this->roles()->sync($rolesId);
+    }
+
+    public function rolesId()
+    {
+        return $this->roles()->pluck('id');
+    }
+
+    public function scopeRolesOnly($q, array $params)
+    {
+        $withRole = ['roles' => function ($p) use ($params) {
+            return $p->select($params);
+        }];
+
+        return $q->with($withRole);
+    }
 }

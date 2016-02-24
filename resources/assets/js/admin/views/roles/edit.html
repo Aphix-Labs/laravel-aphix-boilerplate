@@ -11,7 +11,7 @@
                 <label class="col-md-4 control-label">Name</label>
 
                 <div class="col-md-6">
-                    <input type="text" class="form-control" ng-model="vm.role.name">
+                    <input type="text" class="form-control" ng-model="vm.data.name">
 
                     <span ng-if="vm.hasError('name')" class="help-block">
                         <strong>{{ vm.errors.name[0] }}</strong>
@@ -24,10 +24,30 @@
                 <label class="col-md-4 control-label">Nombre legible</label>
 
                 <div class="col-md-6">
-                    <input type="text" class="form-control" ng-model="vm.role.label">
+                    <input type="text" class="form-control" ng-model="vm.data.label">
 
                     <span ng-if="vm.hasError('label')" class="help-block">
                         <strong>{{ vm.errors.label[0] }}</strong>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="form-group" ng-class="{'has-error': vm.hasError('permissions')}">
+                <label class="col-md-4 control-label">Permisos</label>
+
+                <div class="col-md-6">
+                    <ui-select multiple ng-model="vm.data.permissions">
+                        <ui-select-match placeholder="Selecciona permisos...">
+                           {{$item.label}}
+                        </ui-select-match>
+                        <ui-select-choices repeat="permission.id as permission in (vm.permissions | filter: $select.search) track by $index">
+                            <span ng-bind="permission.label "></span>
+                        </ui-select-choices>
+                    </ui-select>
+
+                    <span ng-if="vm.hasError('permissions')" class="help-block">
+                        <strong>{{ vm.errors.permissions[0] }}</strong>
                     </span>
                 </div>
 

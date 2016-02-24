@@ -20,4 +20,23 @@ class Role extends Model
     {
         return $this->permissions()->save($permission);
     }
+
+    public function permissionsId()
+    {
+        return $this->permissions()->pluck('id');
+    }
+
+    public function syncPermissions(array $permissionsId)
+    {
+        return $this->permissions()->sync($permissionsId);
+    }
+
+    public function scopePermissionsOnly($q, array $params)
+    {
+        $withPermission = ['permissions' => function ($p) use ($params) {
+            return $p->select($params);
+        }];
+
+        return $q->with($withPermission);
+    }
 }

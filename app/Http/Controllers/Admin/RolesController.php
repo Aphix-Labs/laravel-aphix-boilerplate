@@ -32,7 +32,21 @@ class RolesController extends ApiController
         ];
     }
 
-    public function create($request)
+    public function index()
+    {
+        return $this->repository->permissionsOnly(['label'])->get();
+    }
+
+    public function show($id)
+    {
+        $role = $this->repository->findOrFail($id);
+
+        $role->permissions = $role->permissionsId();
+
+        return $role;
+    }
+
+    public function insert(Request $request)
     {
         $role = $this->repository->create($request->all());
 
@@ -41,5 +55,14 @@ class RolesController extends ApiController
         foreach ($permissions as $permission) {
             $role->grantPermission($permission);
         }
+    }
+
+    public function dbUpdate($entity, Request $request)
+    {
+        $entity->fill($request->all());
+
+        $entity->save();
+
+        $entity->syncPermissions($request['permissions']);
     }
 }

@@ -82,6 +82,11 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
         return RoleService.getRole($stateParams.id).then(function(data) {
           return data.data;
         });
+      },
+      permissions: function(PermissionService) {
+        return PermissionService.all().then(function(data) {
+          return data.data;
+        });
       }
     },
   });

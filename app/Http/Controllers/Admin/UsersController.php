@@ -19,19 +19,20 @@ class UsersController extends ApiController
     protected function rulesStore()
     {
         return [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'name'     => 'required|max:255',
+            'email'    => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
-            'roles.*' => 'exists:roles,id'
+            'roles.*'  => 'exists:roles,id'
         ];
     }
 
     protected function rulesUpdate($id)
     {
         return [
-            'name' => 'sometimes|required|max:255',
-            'email' => 'sometimes|required|email|max:255|unique:users,email,' . $id,
+            'name'     => 'sometimes|required|max:255',
+            'email'    => 'sometimes|required|email|max:255|unique:users,email,' . $id,
             'password' => 'sometimes|required|confirmed|min:6',
+            'roles.*'  => 'exists:roles,id'
         ];
     }
 

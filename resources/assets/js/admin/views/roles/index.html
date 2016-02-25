@@ -24,8 +24,8 @@
                         <td>{{ role.name }}</td>
                         <td>{{ role.label }}</td>
                         <td>
-                            <span class="label label-primary" ng-repeat="permission in role.permissions">
-                                {{ permission.label }}
+                            <span ng-repeat="permission in role.permissions">
+                                <span class="label label-primary">{{ permission.label }}</span>
                             </span>
                         </td>
                         <td>

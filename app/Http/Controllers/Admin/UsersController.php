@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\ApiController;
 use App\User;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
+use Illuminate\Contracts\Validation\Validator;
 
 class UsersController extends ApiController
 {
@@ -63,5 +63,15 @@ class UsersController extends ApiController
         $entity->save();
 
         $entity->syncRoles($request['roles']);
+    }
+
+    protected function formatValidationErrors(Validator $validator)
+    {
+        foreach ($validator->errors()->getMessages() as $key => $message) {
+            if (starts_with($key, 'roles')) {
+                $validator->errors()->add('roles', $message[0]);
+            }
+        }
+        return $validator->errors()->getMessages();
     }
 }

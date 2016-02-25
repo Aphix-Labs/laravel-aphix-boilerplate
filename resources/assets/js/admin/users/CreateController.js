@@ -1,7 +1,10 @@
 module.exports = function (roles, UserService, $state, toastr) {
   'ngInject';
   var vm = this;
-
+  vm.action = 'Crear';
+  vm.roles = roles;
+  vm.errors = {};
+  vm.formIsSubmit = false;
   vm.data = {
     name:  '',
     email: '',
@@ -9,12 +12,6 @@ module.exports = function (roles, UserService, $state, toastr) {
     password_confirmation: '',
     roles: []
   };
-
-  vm.roles = roles;
-
-  vm.errors = {};
-
-  vm.formIsSubmit = false;
 
   this.hasError = function(property) {
     if (vm.errors.hasOwnProperty(property)) {

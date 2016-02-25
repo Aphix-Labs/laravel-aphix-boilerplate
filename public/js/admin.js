@@ -54398,7 +54398,10 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
 module.exports = function (roles, UserService, $state, toastr) {
   'ngInject';
   var vm = this;
-
+  vm.action = 'Crear';
+  vm.roles = roles;
+  vm.errors = {};
+  vm.formIsSubmit = false;
   vm.data = {
     name: '',
     email: '',
@@ -54406,12 +54409,6 @@ module.exports = function (roles, UserService, $state, toastr) {
     password_confirmation: '',
     roles: []
   };
-
-  vm.roles = roles;
-
-  vm.errors = {};
-
-  vm.formIsSubmit = false;
 
   this.hasError = function (property) {
     if (vm.errors.hasOwnProperty(property)) {
@@ -54440,10 +54437,10 @@ module.exports = function (roles, UserService, $state, toastr) {
 module.exports = function (data, roles, UserService, $state, $stateParams, toastr) {
   'ngInject';
   var vm = this;
+  vm.action = 'Editar';
   vm.data = data;
   vm.roles = roles;
   vm.errors = {};
-
   vm.formIsSubmit = false;
 
   this.hasError = function (property) {

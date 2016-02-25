@@ -25,7 +25,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/user/create',
     controller: require('./users/CreateController'),
     controllerAs: 'vm',
-    template: require('./views/users/create.html'),
+    template: require('./views/users/form.html'),
     resolve : {
       roles: function(RoleService) {
         return RoleService.getRoles().then(function(data) {
@@ -38,7 +38,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/user/edit/:id',
     controller: require('./users/EditController'),
     controllerAs: 'vm',
-    template: require('./views/users/edit.html'),
+    template: require('./views/users/form.html'),
     resolve: {
       data: function(UserService, $stateParams) {
         return UserService.getUser($stateParams.id).then(function(data) {
@@ -71,7 +71,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/roles/create',
     controller: require('./roles/CreateController'),
     controllerAs: 'vm',
-    template: require('./views/roles/create.html'),
+    template: require('./views/roles/form.html'),
     resolve: {
       permissions: function(PermissionService) {
         return PermissionService.all().then(function(data) {
@@ -84,7 +84,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     url: '/roles/edit/:id',
     controller: require('./roles/EditController'),
     controllerAs: 'vm',
-    template: require('./views/roles/edit.html'),
+    template: require('./views/roles/form.html'),
     resolve: {
       role: function(RoleService, $stateParams) {
         return RoleService.getRole($stateParams.id).then(function(data) {
@@ -96,7 +96,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
           return data.data;
         });
       }
-    },
+    }
   });
 
   $urlRouterProvider.otherwise('/admin');

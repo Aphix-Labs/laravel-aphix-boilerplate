@@ -2,6 +2,8 @@ module.exports = function (RoleService, $state, toastr, permissions) {
   'ngInject';
   var vm = this;
 
+  vm.action = 'Crear';
+
   vm.data = {
     name:  '',
     label: '',
@@ -9,7 +11,6 @@ module.exports = function (RoleService, $state, toastr, permissions) {
   };
 
   vm.permissions = permissions;
-  console.log(vm.permissions);
 
   vm.errors = {};
 

@@ -2,6 +2,8 @@ module.exports = function (role, permissions, RoleService, $state, $stateParams,
   'ngInject';
   var vm = this;
 
+  vm.action = 'Editar';
+
   vm.data =  role;
 
   vm.permissions = permissions;

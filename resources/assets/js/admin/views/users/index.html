@@ -24,8 +24,8 @@
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
                         <td>
-                            <span class="label label-primary" ng-repeat="role in user.roles">
-                                {{ role.label }}
+                            <span ng-repeat="role in user.roles">
+                                <span class='label label-primary'>{{ role.label }}</span>
                             </span>
                         </td>
                         <td>

@@ -26,3 +26,10 @@ $factory->define(App\Role::class, function (Faker\Generator $faker) {
         'label' => $faker->sentence,
     ];
 });
+
+$factory->define(App\Permission::class, function (Faker\Generator $faker) {
+    return [
+        'name' => str_slug($faker->name),
+        'label' => $faker->sentence,
+    ];
+});

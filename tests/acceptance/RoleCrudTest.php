@@ -56,7 +56,7 @@ class RoleCrudTest extends TestCase
     /**
      * @test
      */
-    public function a_role_can_be_create_without_permissions()
+    public function a_role_can_be_created_without_permissions()
     {
         $requestData = [
             'name' => 'dummy rol',
@@ -84,17 +84,12 @@ class RoleCrudTest extends TestCase
         $this->json('post', '/admin/roles', $requestData)
             ->seeJsonStructure(['message'])
             ->seeStatusCode(200);
-
-        // check in database
-        $this->seeInDatabase('roles', ['name' => $requestData['name']]);
-
-        // or make another request to get all roles?
     }
 
     /**
      * @test
      */
-    public function an_existence_role_cannot_be_empty()
+    public function an_exisent_role_cannot_be_empty()
     {
         $role = factory(Role::class)->create();
 
@@ -112,7 +107,7 @@ class RoleCrudTest extends TestCase
     /**
      * @test
      */
-    public function a_role_can_be_editable()
+    public function a_role_can_be_updated()
     {
         $role = factory(Role::class)->create();
 

@@ -22,11 +22,11 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="user in vm.users">
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ ::user.name }}</td>
+                        <td>{{ ::user.email }}</td>
                         <td>
                             <span ng-repeat="role in user.roles">
-                                <span class='label label-primary'>{{ role.label }}</span>
+                                <span class='label label-primary'>{{ ::role.label }}</span>
                             </span>
                         </td>
                         <td>

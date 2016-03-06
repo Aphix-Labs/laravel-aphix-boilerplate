@@ -22,11 +22,11 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="role in vm.roles">
-                        <td>{{ role.name }}</td>
-                        <td>{{ role.label }}</td>
+                        <td>{{ ::role.name }}</td>
+                        <td>{{ ::role.label }}</td>
                         <td>
                             <span ng-repeat="permission in role.permissions">
-                                <span class="label label-primary">{{ permission.label }}</span>
+                                <span class="label label-primary">{{ ::permission.label }}</span>
                             </span>
                         </td>
                         <td>

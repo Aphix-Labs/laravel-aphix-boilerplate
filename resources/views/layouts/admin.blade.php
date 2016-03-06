@@ -79,13 +79,13 @@
                         </a>
                         <ul aria-expanded="true" class="collapse in">
                             <li>
-                                <a ui-sref="users.list" ui-sref-active-eq="active">
+                                <a ui-sref="users" ui-sref-active="active">
                                     <span class="sidebar-nav-item-icon fa fa-users"></span>
                                     Usuarios
                                 </a>
                             </li>
                             <li>
-                                <a ui-sref="roles.list" ui-sref-active-eq="active">
+                                <a ui-sref="roles" ui-sref-active="active">
                                     <span class="sidebar-nav-item-icon fa fa-key"></span>
                                     Roles
                                 </a>

@@ -26,7 +26,7 @@ module.exports = function (roles, UserService, $state, toastr) {
     UserService.createUser(vm.data)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
-      $state.go('users.list');
+      $state.go('users', {}, {reload: true});
     })
     .catch(function(errors) {
       vm.errors = errors.data;

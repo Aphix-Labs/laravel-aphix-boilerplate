@@ -12091,13 +12091,12 @@ body.stop-scrolling {
 
 .sidebar-nav ul a {
   padding: 10px 20px;
-  color: #aaa;
 }
 
 .sidebar-nav ul a:hover,
 .sidebar-nav ul a:focus,
 .sidebar-nav ul a:active {
-  color: #000;
+  background-color: #DEDEDE;
   text-decoration: none;
 }
 
@@ -12109,7 +12108,8 @@ body.stop-scrolling {
 .sidebar-nav ul ul a:hover,
 .sidebar-nav ul ul a:focus,
 .sidebar-nav ul ul a:active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #DEDEDE;
+  text-decoration: none;
 }
 
 .sidebar-nav-item {
@@ -12118,4 +12118,8 @@ body.stop-scrolling {
 
 .sidebar-nav-item-icon {
   padding-right: 5px;
+}
+
+.sidebar-nav ul li > a.active {
+  background-color: #DEDEDE;
 }

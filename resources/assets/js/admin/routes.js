@@ -10,11 +10,6 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
   $stateProvider
   .state('users', {
     url: '/users',
-    abstract: true,
-    template: '<ui-view/>'
-  }).
-  state('users.list', {
-    url: '/list',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
     template: require('./views/users/index.html'),
@@ -61,11 +56,6 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
   $stateProvider
   .state('roles', {
     url: '/roles',
-    abstract: true,
-    template: '<ui-view/>'
-  })
-  .state('roles.list', {
-    url: '/list',
     controller: require('./roles/ListController'),
     controllerAs: 'vm',
     template: require('./views/roles/index.html'),

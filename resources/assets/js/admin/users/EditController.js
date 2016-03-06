@@ -20,7 +20,7 @@ module.exports = function (data, roles, UserService, $state, $stateParams, toast
     UserService.updateUser(vm.getId(), vm.data)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
-      $state.go('users.list');
+      $state.go('users', {}, {reload: true});
     })
     .catch(function(errors) {
       vm.errors = errors.data;

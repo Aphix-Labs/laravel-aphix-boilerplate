@@ -22,7 +22,7 @@ module.exports = function (role, permissions, RoleService, $state, $stateParams,
   this.submitForm = function () {
     vm.formIsSubmit = true;
 
-    RoleService.updateRole(vm.data)
+    RoleService.updateResource(vm.getId(), vm.data)
     .then(function(role) {
       toastr.success(role.data.message, 'Estado!');
       $state.go('roles', {}, {reload: true});

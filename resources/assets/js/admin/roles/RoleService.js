@@ -1,23 +1,7 @@
-module.exports = function ($http, $q) {
+module.exports = function (ApiService) {
   'ngInject';
 
-  this.getRoles = function () {
-    return $http.get('/admin/roles');
-  };
+  angular.extend(this, ApiService);
 
-  this.getRole = function (id) {
-    return $http.get('/admin/roles/' + id);
-  };
-
-  this.createRole = function(data) {
-    return $http.post('/admin/roles', data);
-  };
-
-  this.updateRole = function(data) {
-    return $http.put('/admin/roles/' + data.id, data, {ignoreLoadingBar: true});
-  };
-
-  this.deleteRole = function(id) {
-    return $http.delete('/admin/roles/' + id);
-  };
+  this.resource = 'roles';
 };

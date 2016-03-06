@@ -11,6 +11,8 @@ class Role extends Model
         'label'
     ];
 
+    protected $perPage = 10;
+
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);

@@ -15,7 +15,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     template: require('./views/users/index.html'),
     resolve: {
       users: function(UserService, $stateParams) {
-        return UserService.getUsers($stateParams.page).then(function(data) {
+        return UserService.getResourcesPerPage($stateParams.page).then(function(data) {
           return data.data;
         });
       }
@@ -28,7 +28,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     template: require('./views/users/form.html'),
     resolve : {
       roles: function(RoleService) {
-        return RoleService.getRoles().then(function(data) {
+        return RoleService.getResources().then(function(data) {
           return data.data;
         });
       }
@@ -41,12 +41,12 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     template: require('./views/users/form.html'),
     resolve: {
       data: function(UserService, $stateParams) {
-        return UserService.getUser($stateParams.id).then(function(data) {
+        return UserService.getResource($stateParams.id).then(function(data) {
           return data.data;
         });
       },
       roles: function(RoleService) {
-        return RoleService.getRoles().then(function(data) {
+        return RoleService.getResources().then(function(data) {
           return data.data;
         });
       }
@@ -55,13 +55,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
 
   $stateProvider
   .state('roles', {
-    url: '/roles',
+    url: '/roles?page',
     controller: require('./roles/ListController'),
     controllerAs: 'vm',
     template: require('./views/roles/index.html'),
     resolve: {
-      roles: function(RoleService) {
-        return RoleService.getRoles().then(function(data) {
+      roles: function(RoleService, $stateParams) {
+        return RoleService.getResourcesPerPage($stateParams.page).then(function(data) {
           return data.data;
         });
       }
@@ -87,7 +87,7 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     template: require('./views/roles/form.html'),
     resolve: {
       role: function(RoleService, $stateParams) {
-        return RoleService.getRole($stateParams.id).then(function(data) {
+        return RoleService.getResource($stateParams.id).then(function(data) {
           return data.data;
         });
       },

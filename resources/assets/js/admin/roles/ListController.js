@@ -1,6 +1,13 @@
-module.exports = function (roles, RoleService, toastr, Confirm) {
+module.exports = function (roles, RoleService, toastr, Confirm, $state) {
   var vm = this;
-  vm.roles = roles;
+  vm.roles = roles.data;
+  vm.totalItems = roles.total;
+  vm.currentPage = roles.current_page;
+  vm.itemsPerPage = roles.per_page;
+
+  vm.pageChanged = function() {
+    $state.go('.', {page: vm.currentPage});
+  };
 
   vm.destroy = function (data, index) {
     Confirm.destroy(function() {
@@ -9,7 +16,7 @@ module.exports = function (roles, RoleService, toastr, Confirm) {
   };
 
   vm.deleteRole = function (id, index) {
-    RoleService.deleteRole(id)
+    RoleService.deleteResource(id)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
       vm.removeFromRoles(index);

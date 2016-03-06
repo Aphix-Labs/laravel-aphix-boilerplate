@@ -34,7 +34,15 @@ angular.module('adminApp', [
   uibPaginationConfig.previousText = 'Previo';
   uibPaginationConfig.nextText = 'Siguiente';
 })
+.service('ApiService', require('./ApiService'))
 .service('UserService', require('./users/UserService'))
 .service('RoleService', require('./roles/RoleService'))
 .service('PermissionService', require('./permissions/PermissionService'))
-.service('Confirm', require('./helpers/Confirm'));
+.service('Confirm', require('./helpers/Confirm'))
+// catch errors from ui-router resolve
+.run(function($rootScope, $log) {
+  $rootScope.$on('$stateChangeError',
+    function(event, toState, toParams, fromState, fromParams, error) {
+      $log.error('error', error);
+    });
+});

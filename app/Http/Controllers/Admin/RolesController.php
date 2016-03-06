@@ -34,7 +34,8 @@ class RolesController extends ApiController
 
     public function index()
     {
-        return $this->repository->permissionsOnly(['label'])->get();
+        $query = $this->repository->permissionsOnly(['label'])->oldest();
+        return request()->has('page') ? $query->paginate() : $query->get();
     }
 
     public function show($id)

@@ -18,7 +18,7 @@ module.exports = function (users, UserService, toastr, Confirm, $state) {
   };
 
   vm.deleteUser = function (id, index) {
-    UserService.deleteUser(id)
+    UserService.deleteResource(id)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
       vm.removeFromUsers(index);

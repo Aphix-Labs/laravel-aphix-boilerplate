@@ -17,7 +17,7 @@ module.exports = function (data, roles, UserService, $state, $stateParams, toast
   this.submitForm = function () {
     vm.formIsSubmit = true;
 
-    UserService.updateUser(vm.getId(), vm.data)
+    UserService.updateResource(vm.getId(), vm.data)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
       $state.go('users', {}, {reload: true});

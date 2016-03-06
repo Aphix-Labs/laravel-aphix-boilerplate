@@ -13,13 +13,24 @@ class RoleCrudTest extends TestCase
     /**
      * @test
      */
+    public function paginate_roles()
+    {
+        $roles = factory(Role::class, 3)->create();
+
+        $this->json('get', '/admin/roles?page=1')
+            ->seeJsonStructure(['data' => ['*' => ['id', 'name', 'label', 'permissions']]])
+            ->seeStatusCode(200);
+    }
+
+    /**
+     * @test
+     */
     public function lists_all_roles()
     {
         $roles = factory(Role::class, 3)->create();
 
         $this->json('get', '/admin/roles')
-            ->seeJsonStructure([['id', 'name', 'label', 'permissions']])
-            ->seeJson($roles->toArray()[0])
+            ->seeJsonStructure(['*' => ['id', 'name', 'label', 'permissions']])
             ->seeStatusCode(200);
     }
 

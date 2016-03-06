@@ -16,7 +16,7 @@ class UserCrudTest extends TestCase
         $users = factory(User::class, 3)->create();
 
         $this->get('/admin/users')
-            ->seeJsonStructure(['*' => ['id', 'name', 'email', 'roles']])
+            ->seeJsonStructure(['data' => ['*' => ['id', 'name', 'email', 'roles']]])
             ->seeStatusCode(200);
     }
 

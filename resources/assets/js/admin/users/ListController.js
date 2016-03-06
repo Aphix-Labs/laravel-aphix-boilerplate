@@ -1,16 +1,23 @@
-module.exports = function (users, UserService, toastr, Confirm) {
+module.exports = function (users, UserService, toastr, Confirm, $state) {
   'ngInject';
 
   var vm = this;
-  this.users = users;
+  vm.users = users.data;
+  vm.totalItems = users.total;
+  vm.currentPage = users.current_page;
+  vm.itemsPerPage = users.per_page;
 
-  this.destroy = function (id, index) {
+  vm.pageChanged = function() {
+    $state.go('.', {page: vm.currentPage});
+  };
+
+  vm.destroy = function (id, index) {
     Confirm.destroy(function() {
       vm.deleteUser(id, index);
     });
   };
 
-  this.deleteUser = function (id, index) {
+  vm.deleteUser = function (id, index) {
     UserService.deleteUser(id)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
@@ -21,7 +28,7 @@ module.exports = function (users, UserService, toastr, Confirm) {
     });
   };
 
-  this.removeFromUsers = function (index) {
+  vm.removeFromUsers = function (index) {
     vm.users.splice(index, 1);
   };
 

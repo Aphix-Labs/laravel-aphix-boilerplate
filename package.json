@@ -13,6 +13,7 @@
     "angular-sanitize": "^1.5.0",
     "angular-sweetalert": "^1.1.0",
     "angular-toastr": "^1.6.0",
+    "angular-ui-bootstrap": "^1.2.4",
     "angular-ui-router": "^0.2.15",
     "bootstrap-sass": "^3.0.0",
     "font-awesome": "^4.5.0",

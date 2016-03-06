@@ -2,9 +2,9 @@
 
 // dependencies
 var $ = window.jQuery = require('jquery');
+var angular = require('angular');
 require('bootstrap-sass');
 require('metismenu');
-var angular = require('angular');
 require('angular-animate');
 require('angular-toastr');
 require('angular-ui-router');
@@ -13,6 +13,7 @@ require('angular-sweetalert');
 require('angular-loading-bar');
 require('angular-sanitize');
 require('ui-select');
+require('angular-ui-bootstrap');
 
 // app
 $('#menu').metisMenu();
@@ -24,11 +25,14 @@ angular.module('adminApp', [
   'oitozero.ngSweetAlert',
   'angular-loading-bar',
   'ui.select',
-  'ngSanitize'
+  'ngSanitize',
+  'ui.bootstrap'
 ])
 .config(require('./routes.js'))
-.config(function(uiSelectConfig) {
+.config(function(uiSelectConfig, uibPaginationConfig) {
   uiSelectConfig.theme = 'bootstrap';
+  uibPaginationConfig.previousText = 'Previo';
+  uibPaginationConfig.nextText = 'Siguiente';
 })
 .service('UserService', require('./users/UserService'))
 .service('RoleService', require('./roles/RoleService'))

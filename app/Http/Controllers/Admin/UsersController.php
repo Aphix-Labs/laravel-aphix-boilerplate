@@ -39,7 +39,7 @@ class UsersController extends ApiController
 
     public function index()
     {
-        return $this->repository->rolesOnly(['label'])->get();
+        return $this->repository->rolesOnly(['label'])->oldest()->paginate();
     }
 
     public function show($id)

@@ -9,13 +9,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
   // users
   $stateProvider
   .state('users', {
-    url: '/users',
+    url: '/users?page',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
     template: require('./views/users/index.html'),
     resolve: {
-      users: function(UserService) {
-        return UserService.getUsers().then(function(data) {
+      users: function(UserService, $stateParams) {
+        return UserService.getUsers($stateParams.page).then(function(data) {
           return data.data;
         });
       }

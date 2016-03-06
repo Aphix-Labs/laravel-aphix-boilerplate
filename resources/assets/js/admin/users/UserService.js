@@ -1,8 +1,9 @@
 module.exports = function ($http, $q) {
   'ngInject';
 
-  this.getUsers = function () {
-    return $http.get('/admin/users');
+  this.getUsers = function (page) {
+    page = page || 1;
+    return $http.get('/admin/users?page=' + page);
   };
 
   this.createUser = function(data) {

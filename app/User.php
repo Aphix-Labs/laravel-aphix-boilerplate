@@ -18,6 +18,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $perPage = 10;
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);

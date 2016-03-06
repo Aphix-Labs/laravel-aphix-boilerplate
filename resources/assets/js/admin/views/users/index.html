@@ -36,6 +36,11 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div class='text-center'>
+                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
+            </div>
+
         </div>
     </div>
 </div>

@@ -29,7 +29,7 @@ module.exports = function (RoleService, $state, toastr, permissions) {
     RoleService.createRole(vm.data)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');
-      $state.go('roles');
+      $state.go('roles.list');
     })
     .catch(function(errors) {
       vm.errors = errors.data;

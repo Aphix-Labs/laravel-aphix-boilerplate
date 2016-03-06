@@ -1,6 +1,6 @@
 <div class='row'>
     <div class='pull-right'>
-        <a ui-sref="users-create" class='btn btn-primary'>Nuevo Usuario</a>
+        <a ui-sref='users.create' class='btn btn-primary'>Nuevo Usuario</a>
     </div>
 </div>
 <br>
@@ -29,7 +29,7 @@
                             </span>
                         </td>
                         <td>
-                            <a ui-sref="users-edit({id: user.id})" class="btn btn-success btn-sm">Editar</a>
+                            <a ui-sref="users.edit({id: user.id})" class="btn btn-success btn-sm">Editar</a>
                             <a ng-click="vm.destroy(user.id, $index)" class='btn btn-danger btn-sm'>Eliminar</a>
                         </td>
                     </tr>

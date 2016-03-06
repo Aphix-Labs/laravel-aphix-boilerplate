@@ -25,7 +25,7 @@ module.exports = function (role, permissions, RoleService, $state, $stateParams,
     RoleService.updateRole(vm.data)
     .then(function(role) {
       toastr.success(role.data.message, 'Estado!');
-      $state.go('roles');
+      $state.go('roles.list');
     })
     .catch(function(errors) {
       vm.errors = errors.data;

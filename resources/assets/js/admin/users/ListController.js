@@ -1,6 +1,5 @@
 module.exports = function (users, UserService, toastr, Confirm, $state) {
   'ngInject';
-
   var vm = this;
   vm.users = users.data;
   vm.totalItems = users.total;

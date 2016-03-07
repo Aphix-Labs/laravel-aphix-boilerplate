@@ -62096,9 +62096,8 @@ module.exports = 'ui.select';
 },{"./dist/select.js":27}],29:[function(require,module,exports){
 'use strict';
 
-module.exports = function ($http, $q) {
+module.exports = ["$http", function ($http) {
   'ngInject';
-
   this.resource = '';
 
   this.getResourcesPerPage = function (page) {
@@ -62125,12 +62124,12 @@ module.exports = function ($http, $q) {
   this.updateResource = function (id, data) {
     return $http.put('/admin/' + this.resource + '/' + id, data, { ignoreLoadingBar: true });
   };
-};
+}];
 
 },{}],30:[function(require,module,exports){
 'use strict';
 
-module.exports = function (SweetAlert) {
+module.exports = ["SweetAlert", function (SweetAlert) {
   'ngInject';
 
   return {
@@ -62150,7 +62149,7 @@ module.exports = function (SweetAlert) {
       });
     }
   };
-};
+}];
 
 },{}],31:[function(require,module,exports){
 'use strict';
@@ -62173,34 +62172,34 @@ require('angular-ui-bootstrap');
 // app
 $('#menu').metisMenu();
 
-angular.module('adminApp', ['ui.router', 'ngAnimate', 'toastr', 'oitozero.ngSweetAlert', 'angular-loading-bar', 'ui.select', 'ngSanitize', 'ui.bootstrap']).config(require('./routes.js')).config(function (uiSelectConfig, uibPaginationConfig) {
+angular.module('adminApp', ['ui.router', 'ngAnimate', 'toastr', 'oitozero.ngSweetAlert', 'angular-loading-bar', 'ui.select', 'ngSanitize', 'ui.bootstrap']).config(require('./routes.js')).config(["uiSelectConfig", "uibPaginationConfig", function (uiSelectConfig, uibPaginationConfig) {
   uiSelectConfig.theme = 'bootstrap';
   uibPaginationConfig.previousText = 'Previo';
   uibPaginationConfig.nextText = 'Siguiente';
-}).service('ApiService', require('./ApiService')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService')).service('PermissionService', require('./permissions/PermissionService')).service('Confirm', require('./helpers/Confirm'))
+}]).service('ApiService', require('./ApiService')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService')).service('PermissionService', require('./permissions/PermissionService')).service('Confirm', require('./helpers/Confirm'))
 // catch errors from ui-router resolve
-.run(function ($rootScope, $log) {
+.run(["$rootScope", "$log", function ($rootScope, $log) {
   $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
     $log.error('error', error);
   });
-});
+}]);
 
 },{"./ApiService":29,"./helpers/Confirm":30,"./permissions/PermissionService":32,"./roles/RoleService":36,"./routes.js":37,"./users/UserService":41,"angular":14,"angular-animate":2,"angular-loading-bar":4,"angular-sanitize":6,"angular-sweetalert":7,"angular-toastr":9,"angular-ui-bootstrap":11,"angular-ui-router":12,"bootstrap-sass":15,"jquery":16,"metismenu":17,"sweetalert":26,"ui-select":28}],32:[function(require,module,exports){
 'use strict';
 
-module.exports = function ($http, $q) {
+module.exports = ["$http", "$q", function ($http, $q) {
   'ngInject';
 
   this.all = function () {
     return $http.get('/admin/permissions');
     //
   };
-};
+}];
 
 },{}],33:[function(require,module,exports){
 'use strict';
 
-module.exports = function (RoleService, $state, toastr, permissions) {
+module.exports = ["RoleService", "$state", "toastr", "permissions", function (RoleService, $state, toastr, permissions) {
   'ngInject';
   var vm = this;
 
@@ -62237,12 +62236,12 @@ module.exports = function (RoleService, $state, toastr, permissions) {
       vm.formIsSubmit = false;
     });
   };
-};
+}];
 
 },{}],34:[function(require,module,exports){
 'use strict';
 
-module.exports = function (role, permissions, RoleService, $state, $stateParams, toastr) {
+module.exports = ["role", "permissions", "RoleService", "$state", "$stateParams", "toastr", function (role, permissions, RoleService, $state, $stateParams, toastr) {
   'ngInject';
   var vm = this;
 
@@ -62279,12 +62278,13 @@ module.exports = function (role, permissions, RoleService, $state, $stateParams,
   this.getId = function () {
     return $stateParams.id;
   };
-};
+}];
 
 },{}],35:[function(require,module,exports){
 'use strict';
 
-module.exports = function (roles, RoleService, toastr, Confirm, $state) {
+module.exports = ["roles", "RoleService", "toastr", "Confirm", "$state", function (roles, RoleService, toastr, Confirm, $state) {
+  'ngInject';
   var vm = this;
   vm.roles = roles.data;
   vm.totalItems = roles.total;
@@ -62313,25 +62313,24 @@ module.exports = function (roles, RoleService, toastr, Confirm, $state) {
   vm.removeFromRoles = function (index) {
     vm.roles.splice(index, 1);
   };
-};
+}];
 
 },{}],36:[function(require,module,exports){
 'use strict';
 
-module.exports = function (ApiService) {
+module.exports = ["ApiService", function (ApiService) {
   'ngInject';
 
   angular.extend(this, ApiService);
 
   this.resource = 'roles';
-};
+}];
 
 },{}],37:[function(require,module,exports){
 'use strict';
 
-module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
+module.exports = ["$stateProvider", "$locationProvider", "$urlRouterProvider", function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
   'ngInject';
-
   $locationProvider.html5Mode({
     // enabled: true,
     // requireBase: false
@@ -62344,11 +62343,11 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/users/index.html'),
     resolve: {
-      users: function users(UserService, $stateParams) {
+      users: ["UserService", "$stateParams", function users(UserService, $stateParams) {
         return UserService.getResourcesPerPage($stateParams.page).then(function (data) {
           return data.data;
         });
-      }
+      }]
     }
   }).state('users.create', {
     url: '/create',
@@ -62356,11 +62355,11 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/users/form.html'),
     resolve: {
-      roles: function roles(RoleService) {
+      roles: ["RoleService", function roles(RoleService) {
         return RoleService.getResources().then(function (data) {
           return data.data;
         });
-      }
+      }]
     }
   }).state('users.edit', {
     url: '/edit/:id',
@@ -62368,16 +62367,16 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/users/form.html'),
     resolve: {
-      data: function data(UserService, $stateParams) {
+      data: ["UserService", "$stateParams", function data(UserService, $stateParams) {
         return UserService.getResource($stateParams.id).then(function (data) {
           return data.data;
         });
-      },
-      roles: function roles(RoleService) {
+      }],
+      roles: ["RoleService", function roles(RoleService) {
         return RoleService.getResources().then(function (data) {
           return data.data;
         });
-      }
+      }]
     }
   });
 
@@ -62387,11 +62386,11 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/roles/index.html'),
     resolve: {
-      roles: function roles(RoleService, $stateParams) {
+      roles: ["RoleService", "$stateParams", function roles(RoleService, $stateParams) {
         return RoleService.getResourcesPerPage($stateParams.page).then(function (data) {
           return data.data;
         });
-      }
+      }]
     }
   }).state('roles.create', {
     url: '/create',
@@ -62399,11 +62398,11 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controllerAs: 'vm',
     template: require('./views/roles/form.html'),
     resolve: {
-      permissions: function permissions(PermissionService) {
+      permissions: ["PermissionService", function permissions(PermissionService) {
         return PermissionService.all().then(function (data) {
           return data.data;
         });
-      }
+      }]
     }
   }).state('roles.edit', {
     url: '/edit/:id',
@@ -62411,26 +62410,26 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     controller: require('./roles/EditController'),
     template: require('./views/roles/form.html'),
     resolve: {
-      role: function role(RoleService, $stateParams) {
+      role: ["RoleService", "$stateParams", function role(RoleService, $stateParams) {
         return RoleService.getResource($stateParams.id).then(function (data) {
           return data.data;
         });
-      },
-      permissions: function permissions(PermissionService) {
+      }],
+      permissions: ["PermissionService", function permissions(PermissionService) {
         return PermissionService.all().then(function (data) {
           return data.data;
         });
-      }
+      }]
     }
   });
 
   $urlRouterProvider.otherwise('/admin');
-};
+}];
 
 },{"./roles/CreateController":33,"./roles/EditController":34,"./roles/ListController":35,"./users/CreateController":38,"./users/EditController":39,"./users/ListController":40,"./views/roles/form.html":42,"./views/roles/index.html":43,"./views/users/form.html":44,"./views/users/index.html":45}],38:[function(require,module,exports){
 'use strict';
 
-module.exports = function (roles, UserService, $state, toastr) {
+module.exports = ["roles", "UserService", "$state", "toastr", function (roles, UserService, $state, toastr) {
   'ngInject';
   var vm = this;
   vm.action = 'Crear';
@@ -62464,12 +62463,12 @@ module.exports = function (roles, UserService, $state, toastr) {
       vm.formIsSubmit = false;
     });
   };
-};
+}];
 
 },{}],39:[function(require,module,exports){
 'use strict';
 
-module.exports = function (data, roles, UserService, $state, $stateParams, toastr) {
+module.exports = ["data", "roles", "UserService", "$state", "$stateParams", "toastr", function (data, roles, UserService, $state, $stateParams, toastr) {
   'ngInject';
   var vm = this;
   vm.action = 'Editar';
@@ -62501,14 +62500,13 @@ module.exports = function (data, roles, UserService, $state, $stateParams, toast
   this.getId = function () {
     return $stateParams.id;
   };
-};
+}];
 
 },{}],40:[function(require,module,exports){
 'use strict';
 
-module.exports = function (users, UserService, toastr, Confirm, $state) {
+module.exports = ["users", "UserService", "toastr", "Confirm", "$state", function (users, UserService, toastr, Confirm, $state) {
   'ngInject';
-
   var vm = this;
   vm.users = users.data;
   vm.totalItems = users.total;
@@ -62537,18 +62535,17 @@ module.exports = function (users, UserService, toastr, Confirm, $state) {
   vm.removeFromUsers = function (index) {
     vm.users.splice(index, 1);
   };
-};
+}];
 
 },{}],41:[function(require,module,exports){
 'use strict';
 
-module.exports = function (ApiService) {
+module.exports = ["ApiService", function (ApiService) {
   'ngInject';
-
   angular.extend(this, ApiService);
 
   this.resource = 'users';
-};
+}];
 
 },{}],42:[function(require,module,exports){
 module.exports = '<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">{{ vm.action }} Rol</div>\n        <div class="panel-body">\n\n            <form class="form-horizontal" role="form" method="POST">\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'name\')}">\n                    <label class="col-md-4 control-label">Name</label>\n\n                    <div class="col-md-6">\n                        <input type="text" class="form-control" ng-model="vm.data.name">\n\n                        <span ng-if="vm.hasError(\'name\')" class="help-block">\n                            <strong>{{ vm.errors.name[0] }}</strong>\n                        </span>\n                    </div>\n                </div>\n\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'label\')}">\n                    <label class="col-md-4 control-label">Nombre legible</label>\n\n                    <div class="col-md-6">\n                        <input type="text" class="form-control" ng-model="vm.data.label">\n\n                        <span ng-if="vm.hasError(\'label\')" class="help-block">\n                            <strong>{{ vm.errors.label[0] }}</strong>\n                        </span>\n                    </div>\n\n                </div>\n\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'permissions\')}">\n                    <label class="col-md-4 control-label">Permisos</label>\n\n                    <div class="col-md-6">\n\n                        <ui-select multiple ng-model="vm.data.permissions">\n                            <ui-select-match placeholder="Selecciona permisos...">\n                                {{$item.label}}\n                            </ui-select-match>\n                            <ui-select-choices repeat="permission.id as permission in (vm.permissions | filter: $select.search) track by $index">\n                                <span ng-bind="permission.label "></span>\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <span ng-if="vm.hasError(\'permissions\')" class="help-block">\n                            <strong>{{ vm.errors.permissions[0] }}</strong>\n                        </span>\n                    </div>\n\n                </div>\n\n                <div class="form-group">\n                    <div class="col-md-6 col-md-offset-4">\n                        <button ng-click="vm.submitForm()" class="btn btn-primary">\n                            <i ng-class="{\'fa-key\': !vm.formIsSubmit, \'fa-spinner fa-spin\': vm.formIsSubmit }" class="fa fa-btn "></i> {{vm.action}}\n                        </button>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n';

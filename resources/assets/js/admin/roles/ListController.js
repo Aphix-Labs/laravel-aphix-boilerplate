@@ -1,4 +1,5 @@
 module.exports = function (roles, RoleService, toastr, Confirm, $state) {
+  'ngInject';
   var vm = this;
   vm.roles = roles.data;
   vm.totalItems = roles.total;

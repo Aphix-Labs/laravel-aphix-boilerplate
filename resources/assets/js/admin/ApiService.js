@@ -1,6 +1,5 @@
-module.exports = function($http, $q) {
+module.exports = function($http) {
   'ngInject';
-
   this.resource = '';
 
   this.getResourcesPerPage = function(page) {
@@ -27,5 +26,4 @@ module.exports = function($http, $q) {
   this.updateResource = function(id, data) {
     return $http.put('/admin/' + this.resource + '/' + id, data, {ignoreLoadingBar: true});
   };
-
 };

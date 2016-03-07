@@ -4,6 +4,7 @@ tags
 Homestead.yaml
 Homestead.json
 .env
+.env.testing
 .DS_Store
 storage/clockwork
 .php_cs.cache

@@ -24,7 +24,7 @@
         }
     </style>
 </head>
-<body id="app-layout" ng-app="adminApp" class='ng-cloak'>
+<body id="app-layout" ng-app="adminApp" ng-strict-di class='ng-cloak'>
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">

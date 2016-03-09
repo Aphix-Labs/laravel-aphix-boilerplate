@@ -1,5 +1,10 @@
 var elixir = require('laravel-elixir');
 
+elixir.config.js.browserify.transformers.push({
+  name: 'browserify-ngannotate',
+  options: {}
+});
+
 elixir(function(mix) {
 
   // common

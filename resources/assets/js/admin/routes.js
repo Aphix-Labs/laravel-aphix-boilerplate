@@ -5,8 +5,8 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
     // requireBase: false
   });
 
-  // users
   $stateProvider
+  // users
   .state('users', {
     url: '/users?page',
     controller: require('./users/ListController'),
@@ -96,6 +96,25 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
         });
       }
     }
+  })
+  .state('documents', {
+    url: '/documents?page',
+    controller: require('./documents/ListController'),
+    controllerAs: 'vm',
+    template: require('./views/documents/index.html'),
+    resolve: {
+      documents: function(DocumentService, $stateParams) {
+        return DocumentService.getResourcesPerPage($stateParams.page).then(function(data) {
+          return data.data;
+        });
+      }
+    }
+  })
+  .state('documents.create', {
+    url: '/create',
+    controller: require('./documents/CreateController'),
+    controllerAs: 'vm',
+    template: require('./views/documents/form.html')
   });
 
   $urlRouterProvider.otherwise('/admin');

@@ -1,0 +1,39 @@
+<ui-view>
+<div class='row'>
+    <div class='pull-right'>
+        <a ui-sref='documents.create' class='btn btn-primary'>Nuevo Document</a>
+    </div>
+</div>
+<br>
+
+<div class='row'>
+    <div class="panel panel-default">
+        <div class="panel-heading">Documentos</div>
+
+        <div class="panel-body">
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="document in vm.documents">
+                        <td>{{ ::document.name }}</td>
+                        <td>
+                            <a ui-sref="documents.edit({id: document.id})" class="btn btn-success btn-sm">Editar</a>
+                            <a ng-click="vm.destroy(document.id, $index)" class='btn btn-danger btn-sm'>Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class='text-center'>
+                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
+            </div>
+
+        </div>
+    </div>
+</div>
+</ui-view>

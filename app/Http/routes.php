@@ -19,6 +19,7 @@ Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 
     // actions
     Route::resources(['users' => 'UsersController']);
     Route::resources(['roles' => 'RolesController']);
+    Route::resources(['documents' => 'DocumentsController']);
     Route::get('permissions', 'PermissionsController@index');
 
 });

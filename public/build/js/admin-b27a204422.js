@@ -62129,6 +62129,85 @@ module.exports = ["$http", function ($http) {
 },{}],30:[function(require,module,exports){
 'use strict';
 
+module.exports = ["DocumentService", "$state", "toastr", function (DocumentService, $state, toastr) {
+  'ngInject';
+  var vm = this;
+  vm.action = 'Crear';
+  vm.errors = {};
+  vm.formIsSubmit = false;
+  vm.data = {
+    name: ''
+  };
+
+  this.hasError = function (property) {
+    if (vm.errors.hasOwnProperty(property)) {
+      return true;
+    }
+    return false;
+  };
+
+  this.submitForm = function () {
+    vm.formIsSubmit = true;
+
+    DocumentService.createResource(vm.data).then(function (data) {
+      toastr.success(data.data.message, 'Estado!');
+      $state.go('documents', {}, { reload: true });
+    })['catch'](function (errors) {
+      vm.errors = errors.data;
+    })['finally'](function () {
+      vm.formIsSubmit = false;
+    });
+  };
+}];
+
+},{}],31:[function(require,module,exports){
+'use strict';
+
+module.exports = ["ApiService", function (ApiService) {
+  'ngInject';
+  angular.extend(this, ApiService);
+
+  this.resource = 'documents';
+}];
+
+},{}],32:[function(require,module,exports){
+'use strict';
+
+module.exports = ["documents", "DocumentService", "toastr", "Confirm", "$state", function (documents, DocumentService, toastr, Confirm, $state) {
+  'ngInject';
+  var vm = this;
+  vm.documents = documents.data;
+  vm.totalItems = documents.total;
+  vm.currentPage = documents.current_page;
+  vm.itemsPerPage = documents.per_page;
+
+  vm.pageChanged = function () {
+    $state.go('.', { page: vm.currentPage });
+  };
+
+  vm.destroy = function (id, index) {
+    Confirm.destroy(function () {
+      vm.deleteUser(id, index);
+    });
+  };
+
+  vm.deleteUser = function (id, index) {
+    UserService.deleteResource(id).then(function (data) {
+      toastr.success(data.data.message, 'Estado!');
+      vm.removeFromUsers(index);
+    })['catch'](function (errors) {
+      vm.errors = errors.data;
+    });
+  };
+
+  vm.removeFromUsers = function (index) {
+    vm.users.splice(index, 1);
+  };
+}];
+
+},{}],33:[function(require,module,exports){
+'use strict';
+
 module.exports = ["SweetAlert", function (SweetAlert) {
   'ngInject';
 
@@ -62151,7 +62230,7 @@ module.exports = ["SweetAlert", function (SweetAlert) {
   };
 }];
 
-},{}],31:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 // dependencies
@@ -62176,7 +62255,7 @@ angular.module('adminApp', ['ui.router', 'ngAnimate', 'toastr', 'oitozero.ngSwee
   uiSelectConfig.theme = 'bootstrap';
   uibPaginationConfig.previousText = 'Previo';
   uibPaginationConfig.nextText = 'Siguiente';
-}]).service('ApiService', require('./ApiService')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService')).service('PermissionService', require('./permissions/PermissionService')).service('Confirm', require('./helpers/Confirm'))
+}]).service('ApiService', require('./ApiService')).service('UserService', require('./users/UserService')).service('RoleService', require('./roles/RoleService')).service('PermissionService', require('./permissions/PermissionService')).service('DocumentService', require('./documents/DocumentService')).service('Confirm', require('./helpers/Confirm'))
 // catch errors from ui-router resolve
 .run(["$rootScope", "$log", function ($rootScope, $log) {
   $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
@@ -62184,7 +62263,7 @@ angular.module('adminApp', ['ui.router', 'ngAnimate', 'toastr', 'oitozero.ngSwee
   });
 }]);
 
-},{"./ApiService":29,"./helpers/Confirm":30,"./permissions/PermissionService":32,"./roles/RoleService":36,"./routes.js":37,"./users/UserService":41,"angular":14,"angular-animate":2,"angular-loading-bar":4,"angular-sanitize":6,"angular-sweetalert":7,"angular-toastr":9,"angular-ui-bootstrap":11,"angular-ui-router":12,"bootstrap-sass":15,"jquery":16,"metismenu":17,"sweetalert":26,"ui-select":28}],32:[function(require,module,exports){
+},{"./ApiService":29,"./documents/DocumentService":31,"./helpers/Confirm":33,"./permissions/PermissionService":35,"./roles/RoleService":39,"./routes.js":40,"./users/UserService":44,"angular":14,"angular-animate":2,"angular-loading-bar":4,"angular-sanitize":6,"angular-sweetalert":7,"angular-toastr":9,"angular-ui-bootstrap":11,"angular-ui-router":12,"bootstrap-sass":15,"jquery":16,"metismenu":17,"sweetalert":26,"ui-select":28}],35:[function(require,module,exports){
 'use strict';
 
 module.exports = ["$http", "$q", function ($http, $q) {
@@ -62196,7 +62275,7 @@ module.exports = ["$http", "$q", function ($http, $q) {
   };
 }];
 
-},{}],33:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 module.exports = ["RoleService", "$state", "toastr", "permissions", function (RoleService, $state, toastr, permissions) {
@@ -62238,7 +62317,7 @@ module.exports = ["RoleService", "$state", "toastr", "permissions", function (Ro
   };
 }];
 
-},{}],34:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 module.exports = ["role", "permissions", "RoleService", "$state", "$stateParams", "toastr", function (role, permissions, RoleService, $state, $stateParams, toastr) {
@@ -62280,7 +62359,7 @@ module.exports = ["role", "permissions", "RoleService", "$state", "$stateParams"
   };
 }];
 
-},{}],35:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 module.exports = ["roles", "RoleService", "toastr", "Confirm", "$state", function (roles, RoleService, toastr, Confirm, $state) {
@@ -62315,7 +62394,7 @@ module.exports = ["roles", "RoleService", "toastr", "Confirm", "$state", functio
   };
 }];
 
-},{}],36:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 module.exports = ["ApiService", function (ApiService) {
@@ -62326,7 +62405,7 @@ module.exports = ["ApiService", function (ApiService) {
   this.resource = 'roles';
 }];
 
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 module.exports = ["$stateProvider", "$locationProvider", "$urlRouterProvider", function OnConfig($stateProvider, $locationProvider, $urlRouterProvider) {
@@ -62336,8 +62415,9 @@ module.exports = ["$stateProvider", "$locationProvider", "$urlRouterProvider", f
     // requireBase: false
   });
 
+  $stateProvider
   // users
-  $stateProvider.state('users', {
+  .state('users', {
     url: '/users?page',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
@@ -62421,12 +62501,29 @@ module.exports = ["$stateProvider", "$locationProvider", "$urlRouterProvider", f
         });
       }]
     }
+  }).state('documents', {
+    url: '/documents?page',
+    controller: require('./documents/ListController'),
+    controllerAs: 'vm',
+    template: require('./views/documents/index.html'),
+    resolve: {
+      documents: ["DocumentService", "$stateParams", function documents(DocumentService, $stateParams) {
+        return DocumentService.getResourcesPerPage($stateParams.page).then(function (data) {
+          return data.data;
+        });
+      }]
+    }
+  }).state('documents.create', {
+    url: '/create',
+    controller: require('./documents/CreateController'),
+    controllerAs: 'vm',
+    template: require('./views/documents/form.html')
   });
 
   $urlRouterProvider.otherwise('/admin');
 }];
 
-},{"./roles/CreateController":33,"./roles/EditController":34,"./roles/ListController":35,"./users/CreateController":38,"./users/EditController":39,"./users/ListController":40,"./views/roles/form.html":42,"./views/roles/index.html":43,"./views/users/form.html":44,"./views/users/index.html":45}],38:[function(require,module,exports){
+},{"./documents/CreateController":30,"./documents/ListController":32,"./roles/CreateController":36,"./roles/EditController":37,"./roles/ListController":38,"./users/CreateController":41,"./users/EditController":42,"./users/ListController":43,"./views/documents/form.html":45,"./views/documents/index.html":46,"./views/roles/form.html":47,"./views/roles/index.html":48,"./views/users/form.html":49,"./views/users/index.html":50}],41:[function(require,module,exports){
 'use strict';
 
 module.exports = ["roles", "UserService", "$state", "toastr", function (roles, UserService, $state, toastr) {
@@ -62465,7 +62562,7 @@ module.exports = ["roles", "UserService", "$state", "toastr", function (roles, U
   };
 }];
 
-},{}],39:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 module.exports = ["data", "roles", "UserService", "$state", "$stateParams", "toastr", function (data, roles, UserService, $state, $stateParams, toastr) {
@@ -62502,7 +62599,7 @@ module.exports = ["data", "roles", "UserService", "$state", "$stateParams", "toa
   };
 }];
 
-},{}],40:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 module.exports = ["users", "UserService", "toastr", "Confirm", "$state", function (users, UserService, toastr, Confirm, $state) {
@@ -62537,7 +62634,7 @@ module.exports = ["users", "UserService", "toastr", "Confirm", "$state", functio
   };
 }];
 
-},{}],41:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 module.exports = ["ApiService", function (ApiService) {
@@ -62547,14 +62644,18 @@ module.exports = ["ApiService", function (ApiService) {
   this.resource = 'users';
 }];
 
-},{}],42:[function(require,module,exports){
-module.exports = '<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">{{ vm.action }} Rol</div>\n        <div class="panel-body">\n\n            <form class="form-horizontal" role="form" method="POST">\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'name\')}">\n                    <label class="col-md-4 control-label">Name</label>\n\n                    <div class="col-md-6">\n                        <input type="text" class="form-control" ng-model="vm.data.name">\n\n                        <span ng-if="vm.hasError(\'name\')" class="help-block">\n                            <strong>{{ vm.errors.name[0] }}</strong>\n                        </span>\n                    </div>\n                </div>\n\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'label\')}">\n                    <label class="col-md-4 control-label">Nombre legible</label>\n\n                    <div class="col-md-6">\n                        <input type="text" class="form-control" ng-model="vm.data.label">\n\n                        <span ng-if="vm.hasError(\'label\')" class="help-block">\n                            <strong>{{ vm.errors.label[0] }}</strong>\n                        </span>\n                    </div>\n\n                </div>\n\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'permissions\')}">\n                    <label class="col-md-4 control-label">Permisos</label>\n\n                    <div class="col-md-6">\n\n                        <ui-select multiple ng-model="vm.data.permissions">\n                            <ui-select-match placeholder="Selecciona permisos...">\n                                {{$item.label}}\n                            </ui-select-match>\n                            <ui-select-choices repeat="permission.id as permission in (vm.permissions | filter: $select.search) track by $index">\n                                <span ng-bind="permission.label "></span>\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <span ng-if="vm.hasError(\'permissions\')" class="help-block">\n                            <strong>{{ vm.errors.permissions[0] }}</strong>\n                        </span>\n                    </div>\n\n                </div>\n\n                <div class="form-group">\n                    <div class="col-md-6 col-md-offset-4">\n                        <button ng-click="vm.submitForm()" class="btn btn-primary">\n                            <i ng-class="{\'fa-key\': !vm.formIsSubmit, \'fa-spinner fa-spin\': vm.formIsSubmit }" class="fa fa-btn "></i> {{vm.action}}\n                        </button>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n';
-},{}],43:[function(require,module,exports){
-module.exports = '<ui-view>\n<div class=\'row\'>\n    <div class=\'pull-right\'>\n        <a ui-sref="roles.create" class=\'btn btn-primary\'>Nuevo Rol</a>\n    </div>\n</div>\n<br>\n\n<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">Roles</div>\n\n        <div class="panel-body">\n            <table class=\'table\'>\n                <thead>\n                    <tr>\n                        <th>Nombre</th>\n                        <th>Nombre publico o legible</th>\n                        <th>Permisos</th>\n                        <th>Acciones</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr ng-repeat="role in vm.roles">\n                        <td>{{ ::role.name }}</td>\n                        <td>{{ ::role.label }}</td>\n                        <td>\n                            <span ng-repeat="permission in role.permissions">\n                                <span class="label label-primary">{{ ::permission.label }}</span>\n                            </span>\n                        </td>\n                        <td>\n                            <a ui-sref="roles.edit({id: role.id})" class="btn btn-success btn-sm">Editar</a>\n                            <a ng-click="vm.destroy(role.id, $index)" class="btn btn-danger btn-sm">Eliminar</a>\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n\n            <div class=\'text-center\'>\n                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>\n            </div>\n\n        </div>\n    </div>\n</div>\n</ui-view>\n';
-},{}],44:[function(require,module,exports){
-module.exports = '<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">{{ vm.action }} Usuario</div>\n\n        <div class="panel-body">\n\n        <form class="form-horizontal" role="form" method="POST">\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'name\')}">\n                <label class="col-md-4 control-label">Name</label>\n\n                <div class="col-md-6">\n                    <input type="text" class="form-control" ng-model="vm.data.name">\n\n                    <span ng-if="vm.hasError(\'name\')" class="help-block">\n                        <strong>{{ vm.errors.name[0] }}</strong>\n                    </span>\n                </div>\n\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'email\')}">\n                <label class="col-md-4 control-label">E-Mail Address</label>\n\n                <div class="col-md-6">\n                    <input type="email" class="form-control" ng-model="vm.data.email">\n\n                    <span ng-if="vm.hasError(\'email\')" class="help-block">\n                        <strong>{{ vm.errors.email[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'password\')}">\n                <label class="col-md-4 control-label">Password</label>\n\n                <div class="col-md-6">\n                    <input type="password" class="form-control" ng-model="vm.data.password">\n\n                    <span ng-if="vm.hasError(\'password\')" class="help-block">\n                        <strong>{{ vm.errors.password[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'password_confirmation\')}">\n                <label class="col-md-4 control-label">Confirm Password</label>\n\n                <div class="col-md-6">\n                    <input type="password" class="form-control" ng-model="vm.data.password_confirmation">\n\n                    <span ng-if="vm.hasError(\'password_confirmation\')" class="help-block">\n                        <strong>{{ vm.errors.password_confirmation[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'roles\')}">\n                <label class="col-md-4 control-label">Roles</label>\n\n                <div class="col-md-6">\n\n                <ui-select multiple ng-model="vm.data.roles">\n                        <ui-select-match placeholder="Selecciona roles...">\n                           {{$item.label}}\n                        </ui-select-match>\n                        <ui-select-choices repeat="role.id as role in (vm.roles | filter: $select.search) track by $index">\n                            <span ng-bind="role.label "></span>\n                        </ui-select-choices>\n                    </ui-select>\n\n                    <span ng-if="vm.hasError(\'roles\')" class="help-block">\n                        <strong>{{ vm.errors.roles[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group">\n                <div class="col-md-6 col-md-offset-4">\n                    <button ng-click="vm.submitForm()" class="btn btn-primary">\n                        <i ng-class="{\'fa-user\': !vm.formIsSubmit, \'fa-spinner fa-spin\': vm.formIsSubmit }" class="fa fa-btn "></i> {{ vm.action }}\n                    </button>\n                </div>\n            </div>\n        </form>\n\n        </div>\n    </div>\n</div>\n';
 },{}],45:[function(require,module,exports){
+module.exports = '<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">{{ vm.action }} Documento</div>\n\n        <div class="panel-body">\n\n        <form class="form-horizontal" role="form" method="POST">\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'name\')}">\n                <label class="col-md-4 control-label">Name</label>\n\n                <div class="col-md-6">\n                    <input type="text" class="form-control" ng-model="vm.data.name">\n\n                    <span ng-if="vm.hasError(\'name\')" class="help-block">\n                        <strong>{{ vm.errors.name[0] }}</strong>\n                    </span>\n                </div>\n\n            </div>\n\n            <div class="form-group">\n                <div class="col-md-6 col-md-offset-4">\n                    <button ng-click="vm.submitForm()" class="btn btn-primary">\n                        <i ng-class="{\'fa-file\': !vm.formIsSubmit, \'fa-spinner fa-spin\': vm.formIsSubmit }" class="fa fa-btn "></i> {{ vm.action }}\n                    </button>\n                </div>\n            </div>\n        </form>\n\n        </div>\n    </div>\n</div>\n';
+},{}],46:[function(require,module,exports){
+module.exports = '<ui-view>\n<div class=\'row\'>\n    <div class=\'pull-right\'>\n        <a ui-sref=\'documents.create\' class=\'btn btn-primary\'>Nuevo Document</a>\n    </div>\n</div>\n<br>\n\n<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">Documentos</div>\n\n        <div class="panel-body">\n            <table class=\'table\'>\n                <thead>\n                    <tr>\n                        <th>Nombre</th>\n                        <th>Acciones</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr ng-repeat="document in vm.documents">\n                        <td>{{ ::document.name }}</td>\n                        <td>\n                            <a ui-sref="documents.edit({id: document.id})" class="btn btn-success btn-sm">Editar</a>\n                            <a ng-click="vm.destroy(document.id, $index)" class=\'btn btn-danger btn-sm\'>Eliminar</a>\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n\n            <div class=\'text-center\'>\n                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>\n            </div>\n\n        </div>\n    </div>\n</div>\n</ui-view>\n';
+},{}],47:[function(require,module,exports){
+module.exports = '<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">{{ vm.action }} Rol</div>\n        <div class="panel-body">\n\n            <form class="form-horizontal" role="form" method="POST">\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'name\')}">\n                    <label class="col-md-4 control-label">Name</label>\n\n                    <div class="col-md-6">\n                        <input type="text" class="form-control" ng-model="vm.data.name">\n\n                        <span ng-if="vm.hasError(\'name\')" class="help-block">\n                            <strong>{{ vm.errors.name[0] }}</strong>\n                        </span>\n                    </div>\n                </div>\n\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'label\')}">\n                    <label class="col-md-4 control-label">Nombre legible</label>\n\n                    <div class="col-md-6">\n                        <input type="text" class="form-control" ng-model="vm.data.label">\n\n                        <span ng-if="vm.hasError(\'label\')" class="help-block">\n                            <strong>{{ vm.errors.label[0] }}</strong>\n                        </span>\n                    </div>\n\n                </div>\n\n                <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'permissions\')}">\n                    <label class="col-md-4 control-label">Permisos</label>\n\n                    <div class="col-md-6">\n\n                        <ui-select multiple ng-model="vm.data.permissions">\n                            <ui-select-match placeholder="Selecciona permisos...">\n                                {{$item.label}}\n                            </ui-select-match>\n                            <ui-select-choices repeat="permission.id as permission in (vm.permissions | filter: $select.search) track by $index">\n                                <span ng-bind="permission.label "></span>\n                            </ui-select-choices>\n                        </ui-select>\n\n                        <span ng-if="vm.hasError(\'permissions\')" class="help-block">\n                            <strong>{{ vm.errors.permissions[0] }}</strong>\n                        </span>\n                    </div>\n\n                </div>\n\n                <div class="form-group">\n                    <div class="col-md-6 col-md-offset-4">\n                        <button ng-click="vm.submitForm()" class="btn btn-primary">\n                            <i ng-class="{\'fa-key\': !vm.formIsSubmit, \'fa-spinner fa-spin\': vm.formIsSubmit }" class="fa fa-btn "></i> {{vm.action}}\n                        </button>\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n';
+},{}],48:[function(require,module,exports){
+module.exports = '<ui-view>\n<div class=\'row\'>\n    <div class=\'pull-right\'>\n        <a ui-sref="roles.create" class=\'btn btn-primary\'>Nuevo Rol</a>\n    </div>\n</div>\n<br>\n\n<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">Roles</div>\n\n        <div class="panel-body">\n            <table class=\'table\'>\n                <thead>\n                    <tr>\n                        <th>Nombre</th>\n                        <th>Nombre publico o legible</th>\n                        <th>Permisos</th>\n                        <th>Acciones</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr ng-repeat="role in vm.roles">\n                        <td>{{ ::role.name }}</td>\n                        <td>{{ ::role.label }}</td>\n                        <td>\n                            <span ng-repeat="permission in role.permissions">\n                                <span class="label label-primary">{{ ::permission.label }}</span>\n                            </span>\n                        </td>\n                        <td>\n                            <a ui-sref="roles.edit({id: role.id})" class="btn btn-success btn-sm">Editar</a>\n                            <a ng-click="vm.destroy(role.id, $index)" class="btn btn-danger btn-sm">Eliminar</a>\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n\n            <div class=\'text-center\'>\n                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>\n            </div>\n\n        </div>\n    </div>\n</div>\n</ui-view>\n';
+},{}],49:[function(require,module,exports){
+module.exports = '<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">{{ vm.action }} Usuario</div>\n\n        <div class="panel-body">\n\n        <form class="form-horizontal" role="form" method="POST">\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'name\')}">\n                <label class="col-md-4 control-label">Name</label>\n\n                <div class="col-md-6">\n                    <input type="text" class="form-control" ng-model="vm.data.name">\n\n                    <span ng-if="vm.hasError(\'name\')" class="help-block">\n                        <strong>{{ vm.errors.name[0] }}</strong>\n                    </span>\n                </div>\n\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'email\')}">\n                <label class="col-md-4 control-label">E-Mail Address</label>\n\n                <div class="col-md-6">\n                    <input type="email" class="form-control" ng-model="vm.data.email">\n\n                    <span ng-if="vm.hasError(\'email\')" class="help-block">\n                        <strong>{{ vm.errors.email[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'password\')}">\n                <label class="col-md-4 control-label">Password</label>\n\n                <div class="col-md-6">\n                    <input type="password" class="form-control" ng-model="vm.data.password">\n\n                    <span ng-if="vm.hasError(\'password\')" class="help-block">\n                        <strong>{{ vm.errors.password[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'password_confirmation\')}">\n                <label class="col-md-4 control-label">Confirm Password</label>\n\n                <div class="col-md-6">\n                    <input type="password" class="form-control" ng-model="vm.data.password_confirmation">\n\n                    <span ng-if="vm.hasError(\'password_confirmation\')" class="help-block">\n                        <strong>{{ vm.errors.password_confirmation[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group" ng-class="{\'has-error\': vm.hasError(\'roles\')}">\n                <label class="col-md-4 control-label">Roles</label>\n\n                <div class="col-md-6">\n\n                <ui-select multiple ng-model="vm.data.roles">\n                        <ui-select-match placeholder="Selecciona roles...">\n                           {{$item.label}}\n                        </ui-select-match>\n                        <ui-select-choices repeat="role.id as role in (vm.roles | filter: $select.search) track by $index">\n                            <span ng-bind="role.label "></span>\n                        </ui-select-choices>\n                    </ui-select>\n\n                    <span ng-if="vm.hasError(\'roles\')" class="help-block">\n                        <strong>{{ vm.errors.roles[0] }}</strong>\n                    </span>\n                </div>\n            </div>\n\n            <div class="form-group">\n                <div class="col-md-6 col-md-offset-4">\n                    <button ng-click="vm.submitForm()" class="btn btn-primary">\n                        <i ng-class="{\'fa-user\': !vm.formIsSubmit, \'fa-spinner fa-spin\': vm.formIsSubmit }" class="fa fa-btn "></i> {{ vm.action }}\n                    </button>\n                </div>\n            </div>\n        </form>\n\n        </div>\n    </div>\n</div>\n';
+},{}],50:[function(require,module,exports){
 module.exports = '<ui-view>\n<div class=\'row\'>\n    <div class=\'pull-right\'>\n        <a ui-sref=\'users.create\' class=\'btn btn-primary\'>Nuevo Usuario</a>\n    </div>\n</div>\n<br>\n\n<div class=\'row\'>\n    <div class="panel panel-default">\n        <div class="panel-heading">Usuarios</div>\n\n        <div class="panel-body">\n            <table class=\'table\'>\n                <thead>\n                    <tr>\n                        <th>Nombre</th>\n                        <th>Email</th>\n                        <th>Roles</th>\n                        <th>Acciones</th>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr ng-repeat="user in vm.users">\n                        <td>{{ ::user.name }}</td>\n                        <td>{{ ::user.email }}</td>\n                        <td>\n                            <span ng-repeat="role in user.roles">\n                                <span class=\'label label-primary\'>{{ ::role.label }}</span>\n                            </span>\n                        </td>\n                        <td>\n                            <a ui-sref="users.edit({id: user.id})" class="btn btn-success btn-sm">Editar</a>\n                            <a ng-click="vm.destroy(user.id, $index)" class=\'btn btn-danger btn-sm\'>Eliminar</a>\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n\n            <div class=\'text-center\'>\n                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>\n            </div>\n\n        </div>\n    </div>\n</div>\n</ui-view>\n';
-},{}]},{},[31]);
+},{}]},{},[34]);
 
 //# sourceMappingURL=admin.js.map

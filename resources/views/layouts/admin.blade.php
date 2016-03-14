@@ -90,6 +90,12 @@
                                     Roles
                                 </a>
                             </li>
+                            <li>
+                                <a ui-sref="documents" ui-sref-active="active">
+                                    <span class="sidebar-nav-item-icon fa fa-file-o"></span>
+                                    Documentos
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

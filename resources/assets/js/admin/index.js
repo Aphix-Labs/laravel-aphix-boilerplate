@@ -38,6 +38,7 @@ angular.module('adminApp', [
 .service('UserService', require('./users/UserService'))
 .service('RoleService', require('./roles/RoleService'))
 .service('PermissionService', require('./permissions/PermissionService'))
+.service('DocumentService', require('./documents/DocumentService'))
 .service('Confirm', require('./helpers/Confirm'))
 // catch errors from ui-router resolve
 .run(function($rootScope, $log) {

@@ -1,7 +1,7 @@
 <ui-view>
 <div class='row'>
     <div class='pull-right'>
-        <a ui-sref='documents.create' class='btn btn-primary'>Nuevo Document</a>
+        <a ui-sref='documents.create' class='btn btn-primary'>Nuevo Documento</a>
     </div>
 </div>
 <br>
@@ -20,7 +20,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="document in vm.documents">
-                        <td>{{ ::document.name }}</td>
+                        <td><a href="{{ ::document.path }}" target="_blank">{{ ::document.name }}</a></td>
                         <td>
                             <a ui-sref="documents.edit({id: document.id})" class="btn btn-success btn-sm">Editar</a>
                             <a ng-click="vm.destroy(document.id, $index)" class='btn btn-danger btn-sm'>Eliminar</a>

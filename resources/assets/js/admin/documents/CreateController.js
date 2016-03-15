@@ -1,4 +1,4 @@
-module.exports = function (DocumentService, $state, toastr) {
+module.exports = function (DocumentService, $state, toastr, $scope, Upload) {
   'ngInject';
   var vm = this;
   vm.action = 'Crear';
@@ -6,6 +6,8 @@ module.exports = function (DocumentService, $state, toastr) {
   vm.formIsSubmit = false;
   vm.data = {
     name:  '',
+    file: '',
+    filename: ''
   };
 
   this.hasError = function(property) {
@@ -16,8 +18,30 @@ module.exports = function (DocumentService, $state, toastr) {
   };
 
   this.submitForm = function () {
-    vm.formIsSubmit = true;
+    if (vm.data.name && vm.data.file) {
+      vm.upload(vm.data.file);
+    }
+  };
 
+  this.upload = function(file) {
+    vm.formIsSubmit = true;
+    Upload.upload({
+      url: '/uploadDocuments',
+      data: {file: file}
+    }).then(function (response) {
+      vm.data.filename = response.data.filename;
+      vm.createDocument();
+    }, function (response) {
+      vm.formIsSubmit = false;
+      vm.errors = response.data;
+    }, function (evt) {
+      var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+      console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+    });
+  };
+
+  this.createDocument = function() {
+    vm.formIsSubmit = true;
     DocumentService.createResource(vm.data)
     .then(function(data) {
       toastr.success(data.data.message, 'Estado!');

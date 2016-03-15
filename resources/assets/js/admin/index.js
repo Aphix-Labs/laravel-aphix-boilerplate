@@ -14,6 +14,7 @@ require('angular-loading-bar');
 require('angular-sanitize');
 require('ui-select');
 require('angular-ui-bootstrap');
+require('ng-file-upload');
 
 // app
 $('#menu').metisMenu();
@@ -26,7 +27,8 @@ angular.module('adminApp', [
   'angular-loading-bar',
   'ui.select',
   'ngSanitize',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ngFileUpload'
 ])
 .config(require('./routes.js'))
 .config(function(uiSelectConfig, uibPaginationConfig) {

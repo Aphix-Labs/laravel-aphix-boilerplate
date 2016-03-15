@@ -1,4 +1,4 @@
-<?php namespace Appe\Services;
+<?php namespace App\Services;
 
 class UploadDocument
 {

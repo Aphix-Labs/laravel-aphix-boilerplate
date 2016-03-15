@@ -111,7 +111,8 @@ return [
 
     'attributes' => [
         'label' => 'nombre legible',
-        'name'  => 'nombre'
+        'name'  => 'nombre',
+        'file'  => 'archivo'
     ],
 
 ];

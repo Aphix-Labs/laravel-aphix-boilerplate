@@ -20,6 +20,7 @@ class DocumentsController extends ApiController
     {
         return [
             'name'     => 'required|max:255',
+            'filename' => 'required|max:255',
         ];
     }
 
@@ -27,20 +28,13 @@ class DocumentsController extends ApiController
     {
         return [
             'name'     => 'sometimes|required|max:255',
+            'filename' => 'required|max:255',
         ];
     }
 
     public function index()
     {
         return $this->repository->oldest()->paginate();
-    }
-
-    public function insert(Request $request)
-    {
-        // call UploadDocumentService
-        //
-
-        $entity = $this->repository->create($request->all());
     }
 
     public function dbUpdate($entity, Request $request)

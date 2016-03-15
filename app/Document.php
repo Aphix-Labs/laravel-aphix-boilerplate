@@ -8,6 +8,7 @@ class Document extends Model
 {
     protected $fillable = [
         'name',
+        'filename',
     ];
 
     protected $hidden = [
@@ -15,5 +16,14 @@ class Document extends Model
         'updated_at',
     ];
 
+    protected $appends = [
+        'path'
+    ];
+
     protected $perPage = 10;
+
+    public function getPathAttribute()
+    {
+        return "/documents/{$this->attributes['filename']}";
+    }
 }

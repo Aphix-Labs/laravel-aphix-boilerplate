@@ -9,6 +9,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
     Route::get('/home', 'HomeController@index');
+    Route::post('uploadDocuments', 'UploadDocumentController@upload');
 });
 
 // admin
@@ -21,5 +22,4 @@ Route::group(['middleware' => ['web', 'auth', 'admin'], 'namespace' => 'Admin', 
     Route::resources(['roles' => 'RolesController']);
     Route::resources(['documents' => 'DocumentsController']);
     Route::get('permissions', 'PermissionsController@index');
-
 });

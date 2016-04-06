@@ -2,9 +2,9 @@ module.exports = function($http) {
   'ngInject';
   this.resource = '';
 
-  this.getResourcesPerPage = function(page) {
-    page = page || 1;
-    return $http.get('/admin/' + this.resource + '?page=' + page);
+  this.filterResources = function(params) {
+    var queryParams = buildQueryParams(params);
+    return $http.get('/admin/' + this.resource + queryParams);
   };
 
   this.getResources = function() {
@@ -26,4 +26,16 @@ module.exports = function($http) {
   this.updateResource = function(id, data) {
     return $http.put('/admin/' + this.resource + '/' + id, data, {ignoreLoadingBar: true});
   };
+
+  function buildQueryParams(params) {
+    var page = params.page || 1;
+    var query = '?page=' + page;
+
+    for (var paramKey in params) {
+      if (paramKey !== 'page' && params[paramKey] !== undefined) {
+        query += '&' + paramKey + '=' + params[paramKey];
+      }
+    }
+    return query;
+  }
 };

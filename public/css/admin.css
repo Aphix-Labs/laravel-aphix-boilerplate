@@ -12922,3 +12922,7 @@ body.stop-scrolling {
 .sidebar-nav ul li > a.active {
   background-color: #DEDEDE;
 }
+
+.action-column {
+  width: 250px;
+}

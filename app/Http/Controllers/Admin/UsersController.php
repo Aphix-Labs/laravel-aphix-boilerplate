@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\User;
 use App\Http\Requests;
+use App\Filters\UserFilter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use Illuminate\Contracts\Validation\Validator;
@@ -11,9 +12,10 @@ use Illuminate\Contracts\Validation\Validator;
 class UsersController extends ApiController
 {
 
-    public function __construct(User $user)
+    public function __construct(User $user, UserFilter $filter)
     {
         $this->repository = $user;
+        $this->filter = $filter;
     }
 
     protected function rulesStore()
@@ -39,7 +41,7 @@ class UsersController extends ApiController
 
     public function index()
     {
-        return $this->repository->rolesOnly(['label'])->oldest()->paginate();
+        return $this->repository->rolesOnly(['label'])->oldest()->filter($this->filter)->paginate();
     }
 
     public function show($id)

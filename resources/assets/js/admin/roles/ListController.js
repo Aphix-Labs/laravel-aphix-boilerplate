@@ -1,13 +1,16 @@
-module.exports = function (roles, RoleService, toastr, Confirm, $state) {
+module.exports = function (roles, RoleService, toastr, Confirm, $state, $stateParams) {
   'ngInject';
   var vm = this;
   vm.roles = roles.data;
   vm.totalItems = roles.total;
-  vm.currentPage = roles.current_page;
   vm.itemsPerPage = roles.per_page;
+  vm.search = $stateParams;
+  vm.search.page = roles.current_page;
+  vm.reload = false;
 
-  vm.pageChanged = function() {
-    $state.go('.', {page: vm.currentPage});
+  vm.filter = function() {
+    $state.go('.', vm.search, {reload: true});
+    vm.reload = true;
   };
 
   vm.destroy = function (data, index) {

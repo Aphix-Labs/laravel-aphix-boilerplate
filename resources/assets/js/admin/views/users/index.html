@@ -17,10 +17,16 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Roles</th>
-                        <th>Acciones</th>
+                        <th class='action-column'>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td> <input ng-model="vm.search.name" ng-blur="vm.filter()" ng-enter="vm.filter()" type="text" class="form-control" placeholder="nombre"></input> </td>
+                        <td> <input ng-model="vm.search.email" ng-blur="vm.filter()" ng-enter="vm.filter()" type="text" class="form-control" placeholder="email"></input> </td>
+                        <td> <input ng-model="vm.search.roles" ng-blur="vm.filter()" ng-enter="vm.filter()" type="text" class="form-control" placeholder="rol"></input> </td>
+                        <td></td>
+                    </tr>
                     <tr ng-repeat="user in vm.users">
                         <td>{{ ::user.name }}</td>
                         <td>{{ ::user.email }}</td>
@@ -37,8 +43,16 @@
                 </tbody>
             </table>
 
-            <div class='text-center'>
-                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination>
+            <div ng-if='vm.reload' class='text-center'>
+                <i class="fa fa-2x fa-spinner fa-spin"></i>
+            </div>
+
+            <div ng-hide="vm.reload" ng-if="vm.users | isEmpty" class='text-center'>
+                Sin resultados
+            </div>
+
+            <div ng-hide="vm.reload" ng-if="! (vm.users | isEmpty)" class='text-center'>
+                <uib-pagination items-per-page="vm.itemsPerPage" total-items="vm.totalItems" ng-model="vm.search.page" ng-change="vm.filter()"></uib-pagination>
             </div>
 
         </div>

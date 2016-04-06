@@ -3,17 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Filters\QueryFilter;
 
 abstract class ApiController extends Controller
 {
     protected $repository;
 
+    protected $filter;
+
     abstract protected function rulesStore();
 
     abstract protected function rulesUpdate($id);
+
+    public function __construct($filter)
+    {
+        $this->filter = $filter;
+    }
 
     public function index()
     {

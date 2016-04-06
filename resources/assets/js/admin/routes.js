@@ -8,13 +8,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
   $stateProvider
   // users
   .state('users', {
-    url: '/users?page',
+    url: '/users?page&name&roles',
     controller: require('./users/ListController'),
     controllerAs: 'vm',
     template: require('./views/users/index.html'),
     resolve: {
       users: function(UserService, $stateParams) {
-        return UserService.getResourcesPerPage($stateParams.page).then(function(data) {
+        return UserService.filterResources($stateParams).then(function(data) {
           return data.data;
         });
       }
@@ -54,13 +54,13 @@ module.exports = function OnConfig($stateProvider, $locationProvider, $urlRouter
 
   $stateProvider
   .state('roles', {
-    url: '/roles?page',
+    url: '/roles?page&name&label&permissions',
     controller: require('./roles/ListController'),
     controllerAs: 'vm',
     template: require('./views/roles/index.html'),
     resolve: {
       roles: function(RoleService, $stateParams) {
-        return RoleService.getResourcesPerPage($stateParams.page).then(function(data) {
+        return RoleService.filterResources($stateParams).then(function(data) {
           return data.data;
         });
       }

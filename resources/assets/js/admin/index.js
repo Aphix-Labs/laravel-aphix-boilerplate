@@ -40,6 +40,8 @@ angular.module('adminApp', [
 .service('PermissionService', require('./permissions/PermissionService'))
 .service('DocumentService', require('./documents/DocumentService'))
 .service('Confirm', require('./helpers/Confirm'))
+.directive('ngEnter', require('./helpers/NgEnter'))
+.filter('isEmpty', require('./helpers/IsEmpty'))
 // catch errors from ui-router resolve
 .run(function($rootScope, $log) {
   $rootScope.$on('$stateChangeError',

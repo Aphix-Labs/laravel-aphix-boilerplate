@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Controllers\ApiController;
 use App\Role;
 use App\Permission;
+use App\Http\Requests;
+use App\Filters\RoleFilter;
+use App\Http\Controllers\ApiController;
 
 class RolesController extends ApiController
 {
-    public function __construct(Role $role)
+    public function __construct(Role $role, RoleFilter $roleFilter)
     {
         $this->repository = $role;
+        $this->filter = $roleFilter;
     }
 
     protected function rulesStore()
@@ -34,7 +36,7 @@ class RolesController extends ApiController
 
     public function index()
     {
-        $query = $this->repository->permissionsOnly(['label'])->oldest();
+        $query = $this->repository->permissionsOnly(['label'])->oldest()->filter($this->filter);
         return request()->has('page') ? $query->paginate() : $query->get();
     }
 
